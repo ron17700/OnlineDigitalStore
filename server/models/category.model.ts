@@ -6,7 +6,7 @@ interface ICategory extends Document {
     isActive: boolean;
 }
 
-const categorySchema = new Schema<ICategory>({
+const CategorySchema = new Schema<ICategory>({
     name: {
         type: String,
         unique: true,
@@ -22,9 +22,9 @@ const categorySchema = new Schema<ICategory>({
         default: true
     }
 }, {
-    timestamps: true // Automatically adds createdAt and updatedAt fields
+    timestamps: true
 });
 
-const CategoryModel: Model<ICategory> = mongoose.model<ICategory>('Category', categorySchema);
+const CategoryModel: Model<ICategory> = mongoose.model('Category', CategorySchema);
 
 export default CategoryModel;

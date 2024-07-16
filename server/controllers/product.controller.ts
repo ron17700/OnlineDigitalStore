@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import productService from "../services/product.service";
+import ProductService from "../services/product.service";
 
 interface ProductController {
     getProduct(req: Request, res: Response, next: NextFunction): Promise<Response | void>;
@@ -7,11 +7,11 @@ interface ProductController {
     createProduct(req: Request, res: Response, next: NextFunction): Promise<Response | void>;
 }
 
-const productController: ProductController = {
+const ProductController: ProductController = {
     async getProduct(req, res, next) {
         try {
             const { productId } = req.params;
-            const product = await productService.getProduct(productId);
+            const product = await ProductService.getProduct(productId);
             if (!product) {
                 const error = new Error('Product not found') as Error & { status: number };
                 error.status = 404;
@@ -25,7 +25,7 @@ const productController: ProductController = {
     },
     async getAllProducts(req, res, next) {
         try {
-            const products = await productService.getAllProducts();
+            const products = await ProductService.getAllProducts();
             return res.json(products);
         } catch (error) {
             next(error);
@@ -33,7 +33,7 @@ const productController: ProductController = {
     },
     async createProduct(req, res, next) {
         try {
-            const newProduct = await productService.createProduct(req.body);
+            const newProduct = await ProductService.createProduct(req.body);
             return res.json(newProduct);
         } catch (error) {
             next(error);
@@ -41,4 +41,4 @@ const productController: ProductController = {
     },
 };
 
-export default productController;
+export default ProductController;

@@ -37,7 +37,7 @@ const ProductSchema = new Schema<IProduct>({
     },
     category: {
         type: Schema.Types.ObjectId,
-        ref: 'Category' // Replace 'Category' with the actual model name if referencing another model
+        ref: 'Category'
     },
     isActive: {
         type: Boolean,
@@ -47,6 +47,6 @@ const ProductSchema = new Schema<IProduct>({
     timestamps: true
 });
 
-const ProductModel: Model<IProduct> = mongoose.model<IProduct>('Product', ProductSchema);
+const ProductModel: Model<IProduct> = mongoose.model('Product', ProductSchema);
 
 export default ProductModel;
