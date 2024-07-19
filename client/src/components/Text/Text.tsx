@@ -33,7 +33,7 @@ export const Text: React.FC<TextProps> = ({
   fontWeight,
   style,
   onClick,
-  fontFamily = "Inter",
+  fontFamily = "Nunito",
   color,
   onMouseEnter,
   onMouseLeave,

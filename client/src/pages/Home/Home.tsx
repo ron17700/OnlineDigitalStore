@@ -3,6 +3,7 @@ import { LogoutButton } from "../Login/components/LogoutButton/LogoutButton";
 import { UserProfile } from "./components/UserProfile/UserProfile";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../App";
+import { Navbar } from "../../components/Navbar/Navbar";
 
 export const Home: React.FC = () => {
   const { isAuthenticated, isLoading } = useAuth0();
@@ -19,6 +20,7 @@ export const Home: React.FC = () => {
 
   return (
     <div>
+      <Navbar />
       <UserProfile />
       <LogoutButton />
     </div>
