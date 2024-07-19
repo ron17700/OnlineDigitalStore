@@ -2,11 +2,11 @@ import Tippy, { TippyProps } from "@tippyjs/react";
 import { ReactNode } from "react";
 import { ToolTipTextContent } from "../ToolTipTextContent/ToolTipTextContent";
 import { getClassName } from "../../Utils/getClassName";
-import "./text-tooltip-wrapper.scss";
+import "./tooltip-content-wrapper.scss";
 
-interface TextTooltipWrapperProps {
+interface TooltipContentWrapperProps {
   children: ReactNode;
-  text: string;
+  content: ReactNode;
   theme?: "light" | "dark";
   delay?: null | number;
   hide?: boolean;
@@ -14,11 +14,11 @@ interface TextTooltipWrapperProps {
   tooltipProps?: TippyProps;
 }
 
-export const TextTooltipWrapper: React.FC<TextTooltipWrapperProps> = ({
+export const TooltipContentWrapper: React.FC<TooltipContentWrapperProps> = ({
   theme = "dark",
   children,
   delay = 500,
-  text,
+  content,
   hide,
   className,
   tooltipProps,
@@ -26,7 +26,13 @@ export const TextTooltipWrapper: React.FC<TextTooltipWrapperProps> = ({
   return (
     <Tippy
       animation="scale-opacity"
-      content={<ToolTipTextContent toolTipText={text} theme={theme} />}
+      content={
+        typeof content === "string" ? (
+          <ToolTipTextContent toolTipText={content} theme={theme} />
+        ) : (
+          content
+        )
+      }
       delay={[delay, 0]}
       disabled={hide}
       interactive={true}
