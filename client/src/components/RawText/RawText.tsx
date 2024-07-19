@@ -1,7 +1,7 @@
 import { MouseEvent } from "react";
 import { getClassName } from "../../Utils/getClassName";
 import { Colors } from "../../styles/colors";
-import "./text.scss";
+import "./raw-text.scss";
 
 export const TEXT_OVERFLOW = {
   ELLIPSIS: "ellipsis",
@@ -25,7 +25,7 @@ export interface TextProps {
   lineClamp?: number;
 }
 
-export const Text: React.FC<TextProps> = ({
+export const RawText: React.FC<TextProps> = ({
   text,
   className,
   textOverflow = "ellipsis",

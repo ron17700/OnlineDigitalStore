@@ -1,6 +1,6 @@
 import React from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { Text } from "../../../../../components/Text/Text";
+import { RawText } from "../../../../../components/RawText/RawText";
 import { colors } from "../../../../../styles/colors";
 import { Separator } from "../../../../../components/Separator/Separator";
 import { ROUTES } from "../../../../../App";
@@ -23,8 +23,8 @@ export const UserProfileMenu: React.FC = () => {
             style={{ borderRadius: "50%" }}
           />
           <div className="flex layout-column">
-            <Text text="Profile" color={colors.gray02} fontSize={16} />
-            <Text text={user?.name} />
+            <RawText text="Profile" color={colors.gray02} fontSize={16} />
+            <RawText text={user?.name} />
           </div>
         </div>
       </div>
@@ -40,7 +40,7 @@ export const UserProfileMenu: React.FC = () => {
             });
           }}
         >
-          <Text text="Logout" />
+          <RawText text="Logout" />
         </div>
       </div>
     </div>
