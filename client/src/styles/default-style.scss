@@ -1,3 +1,5 @@
+@import "./variables.scss";
+
 .flex {
   display: flex;
 }
@@ -296,4 +298,8 @@
 
 .relative {
   position: relative;
+}
+
+.box-shadow {
+  box-shadow: $box-shadow;
 }

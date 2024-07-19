@@ -10,7 +10,7 @@ import "./navbar.scss";
 export const Navbar: React.FC = () => {
   return (
     <div className="navbar-container">
-      <div className="navbar-content-container">
+      <div className="navbar-content-container box-shadow">
         <OceanLogo />
         <RightNavbarContent />
       </div>

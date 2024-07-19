@@ -19,7 +19,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   quantity,
 }) => {
   return (
-    <div className="product-card-container">
+    <div className="product-card-container box-shadow">
       <img className="product-image" src={img} />
       <div className="product-details-container flex align-center column-gap-24">
         <div className="flex layout-column row-gap-4 overflow-hidden">

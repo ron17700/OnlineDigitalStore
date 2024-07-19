@@ -2,11 +2,9 @@
 
 .user-profile-menu-container {
   background-color: $white;
-  box-shadow: 0px 2px 8px 0px #0000001f, 0px 1px 2px 0px #0000001f,
-    0px 0px 1px 0px #0000001f;
   border-radius: 4px;
-  min-width: 200px;
-  max-width: 250px;
+  min-width: 250px;
+  max-width: 350px;
   .user-info-container {
     padding: 8px;
     .user-info-content-container {

@@ -10,7 +10,10 @@ export const UserProfileMenu: React.FC = () => {
   const { user, logout } = useAuth0();
 
   return (
-    <div style={{ maxWidth: "200px" }} className="user-profile-menu-container">
+    <div
+      style={{ maxWidth: "200px" }}
+      className="user-profile-menu-container box-shadow"
+    >
       <div className="user-info-container">
         <div className="flex align-center column-gap-16 user-info-content-container">
           <img
