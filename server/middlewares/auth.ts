@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import {auth, claimIncludes} from "express-oauth2-jwt-bearer";
 
-const isAuthorized = (req: Request, res: Response, next: NextFunction) => {
+const isAuthorized = (req: any, res: Response, next: NextFunction) => {
     const checkJwt = auth({
         audience: process.env.AUTH0_AUDIENCE,
         issuerBaseURL: process.env.AUTH0_ISSUER_BASE_URL,
@@ -16,6 +16,8 @@ const isAuthorized = (req: Request, res: Response, next: NextFunction) => {
                 next(error);
             }
         } else {
+            const { sub } = req.auth?.payload;
+            req.userId = sub;
             next();
         }
     });
