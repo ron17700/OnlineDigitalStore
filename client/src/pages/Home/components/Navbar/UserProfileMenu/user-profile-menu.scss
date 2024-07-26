@@ -1,0 +1,28 @@
+@import "../../../../../styles/colors.scss";
+
+.user-profile-menu-container {
+  background-color: $white;
+  border-radius: 4px;
+  min-width: 250px;
+  max-width: 350px;
+  .user-info-container {
+    padding: 8px;
+    .user-info-content-container {
+      padding: 8px 16px;
+    }
+  }
+
+  .logout-container {
+    padding: 8px;
+    .logout-container-content {
+      padding: 8px 16px;
+      transition: all 0.2s ease-in-out;
+      border-radius: 4px;
+      user-select: none;
+      cursor: pointer;
+      &:hover {
+        background-color: $gray-04;
+      }
+    }
+  }
+}

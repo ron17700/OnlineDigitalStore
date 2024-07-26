@@ -1,0 +1,19 @@
+@import "../../styles/colors.scss";
+@import "../../styles/default-style.scss";
+
+.tool-tip-text-content-container {
+  max-height: 250px;
+  overflow-y: auto;
+  box-sizing: border-box;
+  padding: 4px 6px;
+  border-radius: 4px;
+
+  &.dark {
+    background-color: $gray-01;
+  }
+
+  &.light {
+    background-color: $gray-04;
+    box-shadow: $box-shadow;
+  }
+}

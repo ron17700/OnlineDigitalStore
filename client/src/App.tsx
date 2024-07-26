@@ -1,29 +1,32 @@
 import React from "react";
-import { useAuth0 } from "@auth0/auth0-react";
-import { UserProfile } from "./components/UserProfile/UserProfile";
-import { LogoutButton } from "./components/LogoutButton/LogoutButton";
-import { LoginButton } from "./components/LoginButton/LoginButton";
-import "./App.css";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { Home } from "./pages/Home/Home";
+import { Login } from "./pages/Login/Login";
+import "./App.scss";
+import "./styles/default-style.scss";
+
+export const ROUTES = {
+  HOME: "",
+  LOGIN: "login",
+} as const;
+
+export type Routes = (typeof ROUTES)[keyof typeof ROUTES];
 
 export const App: React.FC = () => {
-  const { isAuthenticated, isLoading } = useAuth0();
+  const router = createBrowserRouter([
+    {
+      path: `/${ROUTES.HOME}`,
+      element: <Home />,
+    },
+    {
+      path: `/${ROUTES.LOGIN}`,
+      element: <Login />,
+    },
+  ]);
 
-  const getContent = () => {
-    if (isLoading) {
-      return <div>Loading ...</div>;
-    }
-
-    if (isAuthenticated) {
-      return (
-        <div>
-          <UserProfile />
-          <LogoutButton />
-        </div>
-      );
-    }
-
-    return <LoginButton />;
-  };
-
-  return <div className="App">{getContent()}</div>;
+  return (
+    <div className="App">
+      <RouterProvider router={router} />
+    </div>
+  );
 };

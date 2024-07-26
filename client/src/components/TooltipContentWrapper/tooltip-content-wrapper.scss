@@ -1,0 +1,9 @@
+// tooltip animation
+.tippy-box[data-animation="scale-opacity"][data-placement^="bottom"] {
+  transform-origin: top;
+}
+
+.tippy-box[data-animation="scale-opacity"][data-state="hidden"] {
+  opacity: 0;
+  transform: scale(0.8);
+}
