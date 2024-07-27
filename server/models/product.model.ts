@@ -13,11 +13,13 @@ export interface IProduct extends Document {
 const ProductSchema = new Schema<IProduct>({
     name: {
         type: String,
+        unique: true,
         required: [true, 'Product name is required!'],
         minLength: [1, 'Product name should not be empty!']
     },
     description: {
         type: String,
+        unique: true,
         required: [true, 'Product description is required!'],
         minLength: [1, 'Product description should not be empty!']
     },

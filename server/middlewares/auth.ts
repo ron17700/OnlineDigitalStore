@@ -1,5 +1,5 @@
-import { Request, Response, NextFunction } from 'express';
-import {auth, claimIncludes} from "express-oauth2-jwt-bearer";
+import { Response, NextFunction } from 'express';
+import {auth} from "express-oauth2-jwt-bearer";
 
 const isAuthorized = (req: any, res: Response, next: NextFunction) => {
     const checkJwt = auth({
@@ -18,25 +18,17 @@ const isAuthorized = (req: any, res: Response, next: NextFunction) => {
         } else {
             const { sub } = req.auth?.payload;
             req.userId = sub;
+            req.isAdmin = req.auth?.payload.permissions.indexOf('admin') !== -1;
             next();
         }
     });
 };
 
-const isAdmin = (req: Request, res: Response, next: NextFunction) => {
-    const checkClaims = claimIncludes('role', 'admin');
-
-    checkClaims(req, res, (error: any) => {
-        if (error) {
-            if (error.name === 'InvalidTokenError') {
-                res.status(401).json({ message: 'Access denied. Admins only.' });
-            } else {
-                next(error);
-            }
-        } else {
-            next();
-        }
-    });
+const isAdmin = (req: any, res: Response, next: NextFunction) => {
+    if (req.isAdmin) {
+        return next();
+    }
+    res.status(401).json({ message: 'Access denied. Admins only.' });
 }
 
 module.exports = {isAuthorized, isAdmin};
