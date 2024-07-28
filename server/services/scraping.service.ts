@@ -1,7 +1,8 @@
 import axios from 'axios';
 import * as cheerio from 'cheerio';
-import fs from 'fs';
 import ProductModel from '../models/product.model';
+// CSV file creation - DEBBUGING PURPOSES
+// import fs from 'fs';
 
 const fetchProducts = async () => {
     try {
