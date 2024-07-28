@@ -5,7 +5,7 @@ export interface IProduct extends Document {
     description: string;
     price: number;
     quantity: number;
-    image: string;
+    images: string[];
     category: Schema.Types.ObjectId;
     isActive: boolean;
 }
@@ -33,10 +33,9 @@ const ProductSchema = new Schema<IProduct>({
         required: [true, 'Product quantity is required!'],
         min: [0, 'Product quantity should be higher than 0!']
     },
-    image: {
-        type: String,
-        required: [true, 'Product name is required!'],
-        minLength: [1, 'Product name should not be empty!']
+    images: {
+        type: [String],
+        default: []
     },
     category: {
         type: Schema.Types.ObjectId,
