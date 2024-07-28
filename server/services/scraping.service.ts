@@ -63,7 +63,7 @@ const saveToMongoDB = async (products: any[]) => {
                 await ProductModel.create(product);
                 console.log(`Inserted: ${product.name}`);
             } else {
-                console.log(`Skipped: ${product.name} (already exists)`);
+                console.log(`Skipped: ${product.name} - already exists`);
             }
         }
         console.log('All products processed.');
