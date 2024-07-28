@@ -19,7 +19,6 @@ const ProductSchema = new Schema<IProduct>({
     },
     description: {
         type: String,
-        unique: true,
         required: [true, 'Product description is required!'],
         minLength: [1, 'Product description should not be empty!']
     },
