@@ -6,6 +6,6 @@ const { isAuthorized } = require('../middlewares/auth');
 
 router.use('/product', isAuthorized, productRoutes);
 router.use('/cart', isAuthorized, cartRoutes);
-router.use('/scraping', isAuthorized, scrapingRoutes);
+router.use('/scraper', isAuthorized, scrapingRoutes);
 
 export default router
