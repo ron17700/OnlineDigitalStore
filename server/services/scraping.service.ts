@@ -5,7 +5,7 @@ import ProductModel from '../models/product.model';
 
 const fetchProducts = async () => {
     try {
-        const response = await axios.get('https://www.amazon.com/s?crid=36QNR0DBY6M7J&k=shelves&ref=glow_cls&refresh=1&sprefix=s%2Caps%2C309');
+        const response = await axios.get('https://www.amazon.com/s?k=tshirts&crid=YDCE2Z7B0P73&sprefix=tshirt%2Caps%2C204');
         const html = response.data;
         const $ = cheerio.load(html);
         const products: any[] = [];
@@ -56,12 +56,22 @@ const fetchProducts = async () => {
 
 const saveToMongoDB = async (shelves: any[]) => {
     try {
-        const result = await ProductModel.insertMany(shelves);
-        console.log(`${result.length} documents were inserted into the collection`);
+        for (const shelf of shelves) {
+            const existingProduct = await ProductModel.findOne({ name: shelf.name });
+            if (!existingProduct) {
+                await ProductModel.create(shelf);
+                console.log(`Inserted: ${shelf.name}`);
+            } else {
+                console.log(`Skipped: ${shelf.name} (already exists)`);
+            }
+        }
+        console.log('All products processed.');
     } catch (error) {
         console.error("Error inserting documents: ", error);
     }
 };
+
+
 
 const scrapeAndSaveProducts = async () => {
     const products = await fetchProducts();
