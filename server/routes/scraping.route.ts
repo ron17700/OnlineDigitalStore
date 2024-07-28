@@ -3,7 +3,7 @@ import { scrapeAndSaveShelves } from '../services/scraping.service';
 
 const router: Router = Router();
 
-router.get('/scrape', async (req, res) => {
+router.get('/', async (req, res) => {
     try {
         await scrapeAndSaveShelves();
         res.status(200).send('Scraping and saving process completed successfully.');
