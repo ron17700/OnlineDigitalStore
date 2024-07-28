@@ -21,9 +21,10 @@ const fetchProducts = async () => {
 
             let elements = {
                 name,
-                description: link, // Placeholder for description
+                description: null,
+                link,
                 price: parseFloat(price.replace(/[^0-9.-]+/g, "")),
-                quantity: 1, // Default quantity
+                quantity: 1,
                 image,
                 category: null, // Placeholder for category
                 isActive: true
@@ -37,7 +38,7 @@ const fetchProducts = async () => {
         //     return Object.values(element).map(item => `"${item}"`).join(',');
         // }).join("\n");
 
-        // fs.writeFile('saved-shelves.csv', "Title, Image, Link, Price, Quantity, Category, isActive" + '\n' + csvContent, 'utf8', function (err: NodeJS.ErrnoException | null) {
+        // fs.writeFile('saved-shelves.csv', "Title, Image, Link, Price, Quantity, Category, isActive, Reviews, Stars" + '\n' + csvContent, 'utf8', function (err: NodeJS.ErrnoException | null) {
         //     if (err) {
         //         console.log('Some error occurred - file either not saved or corrupted.');
         //     } else {
