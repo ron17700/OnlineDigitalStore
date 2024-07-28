@@ -1,8 +1,7 @@
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 import ProductModel from '../models/product.model';
-// CSV file creation - DEBBUGING PURPOSES
-// import fs from 'fs';
+import ProductService from "./product.service";
 
 const fetchProducts = async () => {
     try {
@@ -21,30 +20,17 @@ const fetchProducts = async () => {
 
             let elements = {
                 name,
-                description: null,
+                description: name,
                 link,
                 price: parseFloat(price.replace(/[^0-9.-]+/g, "")),
                 quantity: 1,
                 image,
-                category: null, // Placeholder for category
+                category: null,
                 isActive: true
             };
 
             products.push(elements);
         });
-
-        // CSV file creation - DEBBUGING PURPOSES
-        // let csvContent = products.map(element => {
-        //     return Object.values(element).map(item => `"${item}"`).join(',');
-        // }).join("\n");
-
-        // fs.writeFile('saved-shelves.csv', "Title, Image, Link, Price, Quantity, Category, isActive, Reviews, Stars" + '\n' + csvContent, 'utf8', function (err: NodeJS.ErrnoException | null) {
-        //     if (err) {
-        //         console.log('Some error occurred - file either not saved or corrupted.');
-        //     } else {
-        //         console.log('File has been saved!');
-        //     }
-        // });
 
         return products;
     } catch (error) {
@@ -55,13 +41,7 @@ const fetchProducts = async () => {
 const saveToMongoDB = async (products: any[]) => {
     try {
         for (const product of products) {
-            const existingProduct = await ProductModel.findOne({ name: product.name });
-            if (!existingProduct) {
-                await ProductModel.create(product);
-                console.log(`Inserted: ${product.name}`);
-            } else {
-                console.log(`Skipped: ${product.name} - already exists`);
-            }
+            await ProductModel.create(product);
         }
         console.log('All products processed.');
     } catch (error) {
