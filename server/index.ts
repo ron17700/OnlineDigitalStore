@@ -27,9 +27,11 @@ const start = async () => {
         console.log('Trying to connect to MongoDB...\n');
         await mongoose.connect(process.env.MONGO_URI as string);
         console.log('MongoDB connected successfully\n');
-        console.log('Scraping and saving products...\n');
-        await scrapeAndSaveProducts();
-        console.log('Products scraped and saved successfully\n');
+        if (process.env.SCRAPE_ON_STARTUP === 'true') {
+            console.log('Scraping and saving products...\n');
+            await scrapeAndSaveProducts();
+            console.log('Products scraped and saved successfully\n');
+        }
     } catch (error) {
         console.error((error as Error).message);
         console.log((error as Error).stack);
