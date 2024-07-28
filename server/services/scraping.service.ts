@@ -17,8 +17,6 @@ const fetchProducts = async () => {
             const name = product.find('span.a-size-base-plus.a-color-base.a-text-normal').text();
             const image = product.find('img.s-image').attr('src');
             const link = product.find('a.a-link-normal.a-text-normal').attr('href');
-            const reviews = product.find('div.a-section.a-spacing-none.a-spacing-top-micro > div.a-row.a-size-small').children('span').last().attr('aria-label') || 'No reviews';
-            const stars = product.find('div.a-section.a-spacing-none.a-spacing-top-micro > div > span').attr('aria-label') || 'No rating';
             const price = product.find('span.a-price > span.a-offscreen').text().replace('$', '') || '0';
 
             let elements = {
@@ -27,8 +25,6 @@ const fetchProducts = async () => {
                 price: parseFloat(price.replace(/[^0-9.-]+/g, "")),
                 quantity: 1, // Default quantity
                 image,
-                reviews,
-                stars,
                 category: null, // Placeholder for category
                 isActive: true
             };
@@ -41,7 +37,7 @@ const fetchProducts = async () => {
         //     return Object.values(element).map(item => `"${item}"`).join(',');
         // }).join("\n");
 
-        // fs.writeFile('saved-shelves.csv', "Title, Image, Link, Price, Quantity, Category, isActive, Reviews, Stars" + '\n' + csvContent, 'utf8', function (err: NodeJS.ErrnoException | null) {
+        // fs.writeFile('saved-shelves.csv', "Title, Image, Link, Price, Quantity, Category, isActive" + '\n' + csvContent, 'utf8', function (err: NodeJS.ErrnoException | null) {
         //     if (err) {
         //         console.log('Some error occurred - file either not saved or corrupted.');
         //     } else {

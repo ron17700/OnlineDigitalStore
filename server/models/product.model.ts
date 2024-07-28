@@ -6,8 +6,6 @@ export interface IProduct extends Document {
     price: number;
     quantity: number;
     image: string;
-    reviews: string;
-    stars: string;
     category: Schema.Types.ObjectId;
     isActive: boolean;
 }
@@ -37,16 +35,6 @@ const ProductSchema = new Schema<IProduct>({
         type: String,
         required: [true, 'Product name is required!'],
         minLength: [1, 'Product name should not be empty!']
-    },
-    reviews: {
-        type: String,
-        required: [true, 'Product reviews is required!'],
-        minLength: [1, 'Product reviews should not be empty!']
-    },
-    stars: {
-        type: String,
-        required: [true, 'Product stars is required!'],
-        minLength: [1, 'Product stars should not be empty!']
     },
     category: {
         type: Schema.Types.ObjectId,
