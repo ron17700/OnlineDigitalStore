@@ -54,15 +54,15 @@ const fetchProducts = async () => {
     }
 };
 
-const saveToMongoDB = async (shelves: any[]) => {
+const saveToMongoDB = async (products: any[]) => {
     try {
-        for (const shelf of shelves) {
-            const existingProduct = await ProductModel.findOne({ name: shelf.name });
+        for (const product of products) {
+            const existingProduct = await ProductModel.findOne({ name: product.name });
             if (!existingProduct) {
-                await ProductModel.create(shelf);
-                console.log(`Inserted: ${shelf.name}`);
+                await ProductModel.create(product);
+                console.log(`Inserted: ${product.name}`);
             } else {
-                console.log(`Skipped: ${shelf.name} (already exists)`);
+                console.log(`Skipped: ${product.name} (already exists)`);
             }
         }
         console.log('All products processed.');
