@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 
 import mainRoutes from './routes/index';
 import errorHandler from './middlewares/errorHandler';
+import { scrapeAndSaveProducts } from './services/scraping.service';
 
 dotenv.config({ path: path.join(__dirname, './.env') });
 
@@ -26,11 +27,14 @@ const start = async () => {
         console.log('Trying to connect to MongoDB...\n');
         await mongoose.connect(process.env.MONGO_URI as string);
         console.log('MongoDB connected successfully\n');
+        console.log('Scraping and saving products...\n');
+        await scrapeAndSaveProducts();
+        console.log('Products scraped and saved successfully\n');
     } catch (error) {
         console.error((error as Error).message);
         console.log((error as Error).stack);
     }
-
+    
     app.listen(PORT, () => {
         console.log(`Server is listening on port: ${PORT}\n`);
     });
