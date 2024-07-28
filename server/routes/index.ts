@@ -1,9 +1,14 @@
 const router = require('express').Router();
 import productRoutes from './product.route';
+import categoryRoute from "./category.route";
 import cartRoutes from './cart.route';
-const { isAuthorized } = require('../middlewares/auth');
+import orderRoutes from './order.route';
+import addressRoute from "./address.route";
 
-router.use('/product', isAuthorized, productRoutes);
-router.use('/cart', isAuthorized, cartRoutes);
+router.use('/product', productRoutes);
+router.use('/category', categoryRoute);
+router.use('/cart', cartRoutes);
+router.use('/order', orderRoutes);
+router.use('/address', addressRoute);
 
 export default router

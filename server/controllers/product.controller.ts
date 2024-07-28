@@ -3,8 +3,10 @@ import ProductService from "../services/product.service";
 
 interface ProductController {
     getProduct(req: Request, res: Response, next: NextFunction): Promise<Response | void>;
-    getAllProducts(req: Request, res: Response, next: NextFunction): Promise<Response | void>;
+    getProducts(req: Request, res: Response, next: NextFunction): Promise<Response | void>;
     createProduct(req: Request, res: Response, next: NextFunction): Promise<Response | void>;
+    updateProduct(req: Request, res: Response, next: NextFunction): Promise<Response | void>;
+    deleteProduct(req: Request, res: Response, next: NextFunction): Promise<Response | void>;
 }
 
 const ProductController: ProductController = {
@@ -12,20 +14,14 @@ const ProductController: ProductController = {
         try {
             const { productId } = req.params;
             const product = await ProductService.getProduct(productId);
-            if (!product) {
-                const error = new Error('Product not found') as Error & { status: number };
-                error.status = 404;
-                next(error);
-                return;
-            }
             return res.json(product);
         } catch (error) {
             next(error);
         }
     },
-    async getAllProducts(req, res, next) {
+    async getProducts(req, res, next) {
         try {
-            const products = await ProductService.getAllProducts();
+            const products = await ProductService.getProducts();
             return res.json(products);
         } catch (error) {
             next(error);
@@ -37,6 +33,24 @@ const ProductController: ProductController = {
             return res.json(newProduct);
         } catch (error) {
             next(error);
+        }
+    },
+    async updateProduct(req, res, next) {
+        try {
+            const { productId } = req.params;
+            const updatedProduct = await ProductService.updateProduct(productId, req.body);
+            return res.json(updatedProduct);
+        } catch (ex) {
+            next(ex);
+        }
+    },
+    async deleteProduct(req, res, next) {
+        try {
+            const { productId } = req.params;
+            await ProductService.deleteProduct(productId);
+            return res.json({ message: 'Product deleted successfully!' });
+        } catch (ex) {
+            next(ex);
         }
     },
 };

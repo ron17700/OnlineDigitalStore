@@ -11,14 +11,7 @@ interface CartController {
 const CartController: CartController = {
     async getCart(req, res, next) {
         try {
-            const userId = req.userId;
-            const cart = await CartService.getCart(userId);
-            if (!cart) {
-                const error = new Error('Cart not found') as Error & { status: number };
-                error.status = 404;
-                next(error);
-                return;
-            }
+            const cart = await CartService.getCart(req.userId);
             res.json(cart);
         } catch (error) {
             next(error);
@@ -26,8 +19,7 @@ const CartController: CartController = {
     },
     async createCart(req, res, next) {
         try {
-            const userId = req.userId;
-            const cart = await CartService.createCart(userId);
+            const cart = await CartService.createCart(req.userId);
             res.json(cart);
         } catch (error) {
             next(error);
@@ -35,8 +27,7 @@ const CartController: CartController = {
     },
     async updateCart(req, res, next) {
         try {
-            const userId = req.userId;
-            const cart = await CartService.updateCart(userId, req.body);
+            const cart = await CartService.updateCart(req.userId, req.isAdmin, req.body);
             return res.json(cart);
         } catch (error) {
             next(error);
@@ -44,8 +35,7 @@ const CartController: CartController = {
     },
     async deleteCart(req, res, next) {
         try {
-            const userId = req.userId;
-            await CartService.deleteCart(userId);
+            await CartService.deleteCart(req.userId);
             return res.json({ message: 'Cart deleted successfully!' });
         } catch (error) {
             next(error);

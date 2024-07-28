@@ -6,6 +6,7 @@ import dotenv from 'dotenv';
 import mainRoutes from './routes/index';
 import errorHandler from './middlewares/errorHandler';
 import { scrapeAndSaveProducts } from './services/scraping.service';
+const { isAuthorized} = require('./middlewares/auth');
 
 dotenv.config({ path: path.join(__dirname, './.env') });
 
@@ -18,7 +19,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.resolve(__dirname, './public')));
 
-app.use('/', mainRoutes);
+app.use('/', isAuthorized,  mainRoutes);
 
 app.use(errorHandler);
 
