@@ -1,9 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 import ProductService from "../services/product.service";
+import {IProductQuery} from "../models/product.model";
 
 interface ProductController {
     getProduct(req: Request, res: Response, next: NextFunction): Promise<Response | void>;
     getProducts(req: Request, res: Response, next: NextFunction): Promise<Response | void>;
+    getProductsGroupByCategory(req: Request, res: Response, next: NextFunction): Promise<Response | void>;
     createProduct(req: Request, res: Response, next: NextFunction): Promise<Response | void>;
     updateProduct(req: Request, res: Response, next: NextFunction): Promise<Response | void>;
     deleteProduct(req: Request, res: Response, next: NextFunction): Promise<Response | void>;
@@ -21,7 +23,15 @@ const ProductController: ProductController = {
     },
     async getProducts(req, res, next) {
         try {
-            const products = await ProductService.getProducts();
+            const products = await ProductService.getProducts(req.query as IProductQuery);
+            return res.json(products);
+        } catch (error) {
+            next(error);
+        }
+    },
+    async getProductsGroupByCategory(req, res, next) {
+        try {
+            const products = await ProductService.getProductsGroupByCategory();
             return res.json(products);
         } catch (error) {
             next(error);
@@ -40,8 +50,8 @@ const ProductController: ProductController = {
             const { productId } = req.params;
             const updatedProduct = await ProductService.updateProduct(productId, req.body);
             return res.json(updatedProduct);
-        } catch (ex) {
-            next(ex);
+        } catch (error) {
+            next(error);
         }
     },
     async deleteProduct(req, res, next) {
@@ -49,8 +59,8 @@ const ProductController: ProductController = {
             const { productId } = req.params;
             await ProductService.deleteProduct(productId);
             return res.json({ message: 'Product deleted successfully!' });
-        } catch (ex) {
-            next(ex);
+        } catch (error) {
+            next(error);
         }
     },
 };
