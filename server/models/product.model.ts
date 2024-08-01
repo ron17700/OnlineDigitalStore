@@ -10,6 +10,15 @@ export interface IProduct extends Document {
     isActive: boolean;
 }
 
+export interface IProductQuery {
+    search?: string;
+    minPrice?: number;
+    maxPrice?: number;
+    categoryId?: string;
+    inStock?: 'true' | 'false';
+    sortBy?: 'name:asc' | 'name:desc' | 'price:asc' | 'price:desc';
+}
+
 const ProductSchema = new Schema<IProduct>({
     name: {
         type: String,
@@ -47,6 +56,8 @@ const ProductSchema = new Schema<IProduct>({
 }, {
     timestamps: true
 });
+
+ProductSchema.index({ name: 'text', description: 'text' });
 
 const ProductModel: Model<IProduct> = mongoose.model('Product', ProductSchema);
 
