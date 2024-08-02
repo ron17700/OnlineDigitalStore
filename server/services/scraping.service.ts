@@ -1,16 +1,38 @@
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 import ProductModel from '../models/product.model';
-import ProductService from "./product.service";
 
-const fetchProducts = async () => {
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+const fetchDescription = async (productLink: string): Promise<string> => {
     try {
-        const response = await axios.get('https://www.amazon.com/s?k=tshirts&crid=YDCE2Z7B0P73&sprefix=tshirt%2Caps%2C204');
+        const response = await axios.get(`https://www.amazon.com${productLink}`);
+        const html = response.data;
+        const $ = cheerio.load(html);
+        
+        let description = $('#productDescription > p > span').text().trim();
+        if (!description) {
+            description = '';
+        }
+        
+        return description;
+    } catch (error) {
+        console.error(`Error fetching description for ${productLink}: `, error);
+        return '';
+    }
+};
+
+const fetchProducts = async (query: string) => {
+    try {
+        const response = await axios.get('https://www.amazon.com/s?k=' + query);
         const html = response.data;
         const $ = cheerio.load(html);
         const products: any[] = [];
 
-        $('div.sg-col-4-of-12.s-result-item.s-asin.sg-col-4-of-16.sg-col.sg-col-4-of-20').each((_idx: number, el: cheerio.Element) => {
+        const productElements = $('div.sg-col-4-of-12.s-result-item.s-asin.sg-col-4-of-16.sg-col.sg-col-4-of-20');
+        
+        for (let i = 0; i < 1; i++) { // Change to productElements.length to scrape all products
+            const el = productElements[i];
             const product = $(el);
 
             const name = product.find('span.a-size-base-plus.a-color-base.a-text-normal').text();
@@ -18,30 +40,49 @@ const fetchProducts = async () => {
             const link = product.find('a.a-link-normal.a-text-normal').attr('href');
             const price = product.find('span.a-price > span.a-offscreen').text().replace('$', '') || '0';
 
+            let description = '';
+            if (link) {
+                try {
+                    description = await fetchDescription(link);
+                    if (!description) {
+                        description = name;
+                    }
+                } catch (error) {
+                    description = name;
+                }
+            }
+
             let elements = {
                 name,
-                description: name,
-                link,
+                description, 
+                link: `https://www.amazon.com${link}`,
                 price: parseFloat(price.replace(/[^0-9.-]+/g, "")),
-                quantity: 1,
+                quantity: Math.floor(Math.random() * 100) + 1,
                 image,
                 category: null,
                 isActive: true
             };
 
             products.push(elements);
-        });
-
+            await delay(1000);
+        }
         return products;
+
     } catch (error) {
-        throw error;
+        console.error("Error fetching products: ", error);
     }
 };
 
 const saveToMongoDB = async (products: any[]) => {
     try {
         for (const product of products) {
-            await ProductModel.create(product);
+            const existingProduct = await ProductModel.findOne({ name: product.name });
+            if (!existingProduct) {
+                await ProductModel.create(product);
+                console.log(`Inserted: ${product.name}`);
+            } else {
+                console.log(`Skipped: ${product.name} - already exists`);
+            }
         }
         console.log('All products processed.');
     } catch (error) {
@@ -49,11 +90,13 @@ const saveToMongoDB = async (products: any[]) => {
     }
 };
 
-
-
-const scrapeAndSaveProducts = async () => {
-    const products = await fetchProducts();
-    await saveToMongoDB(products);
+const scrapeAndSaveProducts = async (items: string[]) => {
+    for (const item of items) {
+        const products = await fetchProducts(item);
+        if (products && products.length > 0) {
+            await saveToMongoDB(products);
+        }
+    }
 };
 
 export { scrapeAndSaveProducts };
