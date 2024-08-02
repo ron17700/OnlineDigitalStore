@@ -15,7 +15,7 @@ process.env.rootDir = __dirname;
 const PORT = process.env.PORT || 3001;
 const app = express();
 
-const items = process.env.CATAGORIES?.split(',') ?? [];
+const items = process.env.CATEGORIES?.split(',') ?? [];
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

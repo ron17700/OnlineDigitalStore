@@ -2,11 +2,18 @@ import axios from 'axios';
 import * as cheerio from 'cheerio';
 import ProductModel from '../models/product.model';
 
+const axiosInstance = axios.create({
+    headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
+    }
+});
+
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
 
 const fetchDescription = async (productLink: string): Promise<string> => {
     try {
-        const response = await axios.get(`https://www.amazon.com${productLink}`);
+        const response = await axiosInstance.get(`https://www.amazon.com${productLink}`);
         const html = response.data;
         const $ = cheerio.load(html);
         
@@ -24,7 +31,7 @@ const fetchDescription = async (productLink: string): Promise<string> => {
 
 const fetchProducts = async (category: string) => {
     try {
-        const response = await axios.get('https://www.amazon.com/s?k=' + category);
+        const response = await axiosInstance.get('https://www.amazon.com/s?k=' + category);
         const html = response.data;
         const $ = cheerio.load(html);
         const products: any[] = [];
@@ -59,7 +66,7 @@ const fetchProducts = async (category: string) => {
                 price: parseFloat(price.replace(/[^0-9.-]+/g, "")),
                 quantity: Math.floor(Math.random() * 100) + 1,
                 image,
-                category: category,
+                category,
                 isActive: true
             };
 
@@ -90,8 +97,8 @@ const saveToMongoDB = async (products: any[]) => {
     }
 };
 
-const scrapeAndSaveProducts = async (catagories: string[]) => {
-    for (const category of catagories) {
+const scrapeAndSaveProducts = async (categories: string[]) => {
+    for (const category of categories) {
         const products = await fetchProducts(category);
         if (products && products.length > 0) {
             await saveToMongoDB(products);
