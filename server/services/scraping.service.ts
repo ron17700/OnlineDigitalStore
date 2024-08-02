@@ -1,6 +1,7 @@
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 import ProductModel from '../models/product.model';
+import CategoryModel from '../models/category.model';
 
 const axiosInstance = axios.create({
     headers: {
@@ -59,6 +60,12 @@ const fetchProducts = async (category: string) => {
                 }
             }
 
+            let categoryObj = await CategoryModel.findOne({ name: category });
+            if (!categoryObj) {
+                categoryObj = await CategoryModel.create({ name: category });
+            }
+        
+
             let elements = {
                 name,
                 description, 
@@ -66,7 +73,7 @@ const fetchProducts = async (category: string) => {
                 price: parseFloat(price.replace(/[^0-9.-]+/g, "")),
                 quantity: Math.floor(Math.random() * 100) + 1,
                 image,
-                category,
+                category: categoryObj._id,
                 isActive: true
             };
 
