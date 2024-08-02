@@ -1,0 +1,53 @@
+.ocean-input-container {
+  position: relative;
+  .left-icon-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    transform: translateX(75%);
+  }
+  .right-icon-container {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    transform: translateX(75%);
+  }
+
+  .ocean-input {
+    outline-width: 0px;
+    border: none;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizelegibility;
+    font-family: Nunito, sans-serif;
+    font-size: 16px;
+    line-height: 150%;
+    font-style: normal;
+    font-stretch: normal;
+    text-transform: none;
+    font-weight: 500;
+    position: relative;
+    display: block;
+    margin: 0px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    padding-inline: 2.5rem;
+    box-sizing: border-box;
+    border-radius: 1.25rem;
+    color: inherit;
+    height: 2.5rem;
+    width: 100%;
+    max-width: 100%;
+    transition: background-color 150ms linear 0s;
+    caret-color: var(--cb-color-text-brand);
+    box-shadow: transparent 0px 0px 0px 3px;
+    background: rgba(32, 33, 37, 0.12);
+  }
+}
