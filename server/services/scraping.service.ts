@@ -1,7 +1,8 @@
 import axios from 'axios';
 import * as cheerio from 'cheerio';
-import ProductModel from '../models/product.model';
-import CategoryModel from '../models/category.model';
+import { ICategory } from '../models/category.model';
+import ProductService from './product.service';
+import CategoryService from './category.service';
 
 const axiosInstance = axios.create({
     headers: {
@@ -30,23 +31,24 @@ const fetchDescription = async (productLink: string): Promise<string> => {
     }
 };
 
-const fetchProducts = async (category: string) => {
+const fetchProducts = async (category: ICategory) => {
     try {
-        const response = await axiosInstance.get('https://www.amazon.com/s?k=' + category);
+        const response = await axiosInstance.get('https://www.amazon.com/s?k=' + category.name);
         const html = response.data;
         const $ = cheerio.load(html);
         const products: any[] = [];
 
         const productElements = $('div.sg-col-4-of-12.s-result-item.s-asin.sg-col-4-of-16.sg-col.sg-col-4-of-20');
+        const ProductCount = Math.min(10, productElements.length);
         
-        for (let i = 0; i < 1; i++) { // Change to productElements.length to scrape all products
+        for (let i = 0; i < ProductCount; i++) {
             const el = productElements[i];
             const product = $(el);
 
             const name = product.find('span.a-size-base-plus.a-color-base.a-text-normal').text();
             const image = product.find('img.s-image').attr('src');
             const link = product.find('a.a-link-normal.a-text-normal').attr('href');
-            const price = product.find('span.a-price > span.a-offscreen').text().replace('$', '') || '0';
+            const price = product.find('span.a-price > span.a-offscreen').text().replace('$', '') || (Math.floor(Math.random() * 500) + 100).toString();
 
             let description = '';
             if (link) {
@@ -60,25 +62,19 @@ const fetchProducts = async (category: string) => {
                 }
             }
 
-            let categoryObj = await CategoryModel.findOne({ name: category });
-            if (!categoryObj) {
-                categoryObj = await CategoryModel.create({ name: category });
-            }
-        
-
             let elements = {
                 name,
-                description, 
-                link: `https://www.amazon.com${link}`,
+                description,
                 price: Math.round(parseFloat(price.replace(/[^0-9.-]+/g, ""))),
                 quantity: Math.floor(Math.random() * 100) + 1,
                 images: image ? [image] : [],
-                category: categoryObj._id,
+                category: category.id,
                 isActive: true
             };
+            console.log("Fetched: ", elements.name);
 
             products.push(elements);
-            await delay(1000);
+            await delay((Math.random() * 6000) + 1000);
         }
         return products;
 
@@ -88,25 +84,29 @@ const fetchProducts = async (category: string) => {
 };
 
 const saveToMongoDB = async (products: any[]) => {
-    try {
-        for (const product of products) {
-            const existingProduct = await ProductModel.findOne({ name: product.name });
-            if (!existingProduct) {
-                await ProductModel.create(product);
-                console.log(`Inserted: ${product.name}`);
-            } else {
-                console.log(`Skipped: ${product.name} - already exists`);
-            }
+    for (const product of products) {
+        try {
+            await ProductService.createProduct(product);
+            console.log(`Inserted: ${product.name}`);
         }
-        console.log('All products processed.');
-    } catch (error) {
-        console.error("Error inserting documents: ", error);
+        catch (error) {
+            console.log(`Skipped: ${product.name} - already exists`);
+        }
     }
+    console.log('All products processed.');
 };
 
 const scrapeAndSaveProducts = async (categories: string[]) => {
     for (const category of categories) {
-        const products = await fetchProducts(category);
+        let categoryObj = {} as ICategory;
+        try {
+            await CategoryService.createCategory({ name: category } as any);
+        }
+        catch (error) {}
+        finally {
+            categoryObj = await CategoryService.getCategoryByName(category);
+        }
+        const products = await fetchProducts(categoryObj);
         if (products && products.length > 0) {
             await saveToMongoDB(products);
         }
