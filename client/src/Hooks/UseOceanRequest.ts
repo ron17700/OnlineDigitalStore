@@ -34,6 +34,11 @@ export const useOceanRequest = <
           })
           .then((response) => {
             setResponse(response);
+          })
+          .catch((error) => {
+            setResponse(null);
+          })
+          .finally(() => {
             setIsLoading(false);
           });
       });
