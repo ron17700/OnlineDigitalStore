@@ -1,14 +1,15 @@
-const router = require('express').Router();
-import productRoutes from './product.route';
+import { Router } from "express";
+import productRoutes from "./product.route";
 import categoryRoute from "./category.route";
-import cartRoutes from './cart.route';
-import orderRoutes from './order.route';
+import cartRoutes from "./cart.route";
+import orderRoutes from "./order.route";
 import addressRoute from "./address.route";
 
-router.use('/product', productRoutes);
-router.use('/category', categoryRoute);
-router.use('/cart', cartRoutes);
-router.use('/order', orderRoutes);
-router.use('/address', addressRoute);
+const router = Router();
+router.use("/product", productRoutes);
+router.use("/category", categoryRoute);
+router.use("/cart", cartRoutes);
+router.use("/order", orderRoutes);
+router.use("/address", addressRoute);
 
-export default router
+export default router;

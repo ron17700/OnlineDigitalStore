@@ -1,14 +1,16 @@
-import path from 'path';
-import express from 'express';
-import mongoose from 'mongoose';
-import dotenv from 'dotenv';
+import path from "path";
+import express from "express";
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+import cors from "cors";
+import mongoSanitize from "express-mongo-sanitize";
 
 import mainRoutes from './routes/index';
 import errorHandler from './middlewares/errorHandler';
 import { scrapeAndSaveProducts } from './services/scraping.service';
 const { isAuthorized} = require('./middlewares/auth');
 
-dotenv.config({ path: path.join(__dirname, './.env') });
+dotenv.config({ path: path.join(__dirname, "./.env") });
 
 process.env.rootDir = __dirname;
 
@@ -18,10 +20,12 @@ const app = express();
 const items = process.env.CATEGORIES?.split(',') ?? [];
 
 app.use(express.json());
+app.use(cors());
+app.use(mongoSanitize());
 app.use(express.urlencoded({ extended: false }));
-app.use(express.static(path.resolve(__dirname, './public')));
+app.use(express.static(path.resolve(__dirname, "./public")));
 
-app.use('/', isAuthorized,  mainRoutes);
+app.use("/", isAuthorized, mainRoutes);
 
 app.use(errorHandler);
 

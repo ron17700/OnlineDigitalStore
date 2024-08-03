@@ -5,13 +5,34 @@ import { colors } from "../../../../styles/colors";
 import { UserProfileMenu } from "./UserProfileMenu/UserProfileMenu";
 import { NavbarButton } from "./NavbarButton/NavbarButton";
 import { ShoppingCartIcon, UserIcon } from "@heroicons/react/24/outline";
+import { MagnifyingGlassIcon } from "@heroicons/react/16/solid";
+import { OceanInput } from "../../../../components/OceanInput/OceanInput";
 import "./navbar.scss";
 
 export const Navbar: React.FC = () => {
+  const [searchValue, setSearchValue] = useState("");
   return (
     <div className="navbar-container">
       <div className="navbar-content-container box-shadow">
         <OceanLogo />
+        <div
+          style={{
+            width: "500px",
+          }}
+        >
+          <OceanInput
+            onChange={setSearchValue}
+            placeholder="Search for products..."
+            value={searchValue}
+            leftIcon={
+              <MagnifyingGlassIcon
+                height="16px"
+                width="16px"
+                color={colors.gray02}
+              />
+            }
+          />
+        </div>
         <RightNavbarContent />
       </div>
     </div>
