@@ -1,10 +1,14 @@
 import { Request, Response, NextFunction } from 'express';
 import ProductService from "../services/product.service";
+import {IProductQuery} from "../models/product.model";
 
 interface ProductController {
     getProduct(req: Request, res: Response, next: NextFunction): Promise<Response | void>;
-    getAllProducts(req: Request, res: Response, next: NextFunction): Promise<Response | void>;
+    getProducts(req: Request, res: Response, next: NextFunction): Promise<Response | void>;
+    getProductsGroupByCategory(req: Request, res: Response, next: NextFunction): Promise<Response | void>;
     createProduct(req: Request, res: Response, next: NextFunction): Promise<Response | void>;
+    updateProduct(req: Request, res: Response, next: NextFunction): Promise<Response | void>;
+    deleteProduct(req: Request, res: Response, next: NextFunction): Promise<Response | void>;
 }
 
 const ProductController: ProductController = {
@@ -12,20 +16,22 @@ const ProductController: ProductController = {
         try {
             const { productId } = req.params;
             const product = await ProductService.getProduct(productId);
-            if (!product) {
-                const error = new Error('Product not found') as Error & { status: number };
-                error.status = 404;
-                next(error);
-                return;
-            }
             return res.json(product);
         } catch (error) {
             next(error);
         }
     },
-    async getAllProducts(req, res, next) {
+    async getProducts(req, res, next) {
         try {
-            const products = await ProductService.getAllProducts();
+            const products = await ProductService.getProducts(req.query as IProductQuery);
+            return res.json(products);
+        } catch (error) {
+            next(error);
+        }
+    },
+    async getProductsGroupByCategory(req, res, next) {
+        try {
+            const products = await ProductService.getProductsGroupByCategory();
             return res.json(products);
         } catch (error) {
             next(error);
@@ -35,6 +41,24 @@ const ProductController: ProductController = {
         try {
             const newProduct = await ProductService.createProduct(req.body);
             return res.json(newProduct);
+        } catch (error) {
+            next(error);
+        }
+    },
+    async updateProduct(req, res, next) {
+        try {
+            const { productId } = req.params;
+            const updatedProduct = await ProductService.updateProduct(productId, req.body);
+            return res.json(updatedProduct);
+        } catch (error) {
+            next(error);
+        }
+    },
+    async deleteProduct(req, res, next) {
+        try {
+            const { productId } = req.params;
+            await ProductService.deleteProduct(productId);
+            return res.json({ message: 'Product deleted successfully!' });
         } catch (error) {
             next(error);
         }

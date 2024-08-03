@@ -25,14 +25,19 @@ const CartService = {
         if (!cart) {
             throw new Error('Cart not found!');
         }
+        return cart;
     },
-    async updateCart(userId: string, cart: ICart): Promise<ICart | null> {
+    async updateCart(userId: string, isAdmin: boolean, cart: ICart): Promise<ICart | null> {
         const existingCart: ICart | null = await CartModel.findOne({ user: userId }).exec();
         if (!existingCart) {
             throw new Error('Cart not found!');
         }
 
-        if (!cart?.products) {
+        if (existingCart.user !== userId && !isAdmin) {
+            throw new Error('Unauthorized!');
+        }
+
+        if (!Array.isArray(cart.products)) {
             throw new Error('Cart does not contain any products!');
         }
 

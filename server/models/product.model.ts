@@ -10,14 +10,25 @@ export interface IProduct extends Document {
     isActive: boolean;
 }
 
+export interface IProductQuery {
+    search?: string;
+    minPrice?: number;
+    maxPrice?: number;
+    categoryId?: string;
+    inStock?: 'true' | 'false';
+    sortBy?: 'name:asc' | 'name:desc' | 'price:asc' | 'price:desc';
+}
+
 const ProductSchema = new Schema<IProduct>({
     name: {
         type: String,
+        unique: true,
         required: [true, 'Product name is required!'],
         minLength: [1, 'Product name should not be empty!']
     },
     description: {
         type: String,
+        unique: true,
         required: [true, 'Product description is required!'],
         minLength: [1, 'Product description should not be empty!']
     },
@@ -46,6 +57,8 @@ const ProductSchema = new Schema<IProduct>({
 }, {
     timestamps: true
 });
+
+ProductSchema.index({ name: 'text', description: 'text' });
 
 const ProductModel: Model<IProduct> = mongoose.model('Product', ProductSchema);
 
