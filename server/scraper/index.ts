@@ -6,7 +6,7 @@ import CategoryService from '../services/category.service';
 
 const axiosInstance = axios.create({
     headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3029.110 Safari/537.3'
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.3029.110 Safari/537.3'
     }
 });
 
@@ -33,6 +33,27 @@ const fetchDescription = async (productLink: string): Promise<string> => {
     }
 };
 
+const fetchImages = async (productLink: string): Promise<string[]> => {
+    try {
+        const response = await axiosInstance.get(`https://www.amazon.com${productLink}`);
+        const html = response.data;
+        const $ = cheerio.load(html);
+        
+        const images: string[] = [];
+        $('div.imgTagWrapper img').each((index, element) => {
+            const src = $(element).attr('src');
+            if (src) {
+                images.push(src);
+            }
+        });
+        
+        return images;
+    } catch (error) {
+        console.error(`Error fetching images for ${productLink}: `, error);
+        return [];
+    }
+}
+
 const fetchProducts = async (category: ICategory) => {
     try {
         const response = await axiosInstance.get('https://www.amazon.com/s?k=' + category.name);
@@ -41,17 +62,18 @@ const fetchProducts = async (category: ICategory) => {
         const products: any[] = [];
 
         const productElements = $('div.sg-col-4-of-12.s-result-item.s-asin.sg-col-4-of-16.sg-col.sg-col-4-of-20');
-        const ProductCount = Math.min(10, productElements.length);
+        const ProductCount = Math.min(1, productElements.length);
         
         for (let i = 0; i < ProductCount; i++) {
             const el = productElements[i];
             const product = $(el);
 
             const name = product.find('span.a-size-base-plus.a-color-base.a-text-normal').text();
-            const image = product.find('img.s-image').attr('src');
+            // const image = product.find('img.s-image').attr('src');
             const link = product.find('a.a-link-normal.a-text-normal').attr('href');
             const price = product.find('span.a-price > span.a-offscreen').text().replace('$', '') || (Math.floor(Math.random() * 500) + 100).toString();
 
+            let images: string[] = [];
             let description = '';
             if (link) {
                 try {
@@ -62,6 +84,11 @@ const fetchProducts = async (category: ICategory) => {
                 } catch (error) {
                     description = name;
                 }
+                try {
+                    images = await fetchImages(link);
+                } catch (error) {
+                    images = [];
+                }
             }
 
             let elements = {
@@ -69,7 +96,7 @@ const fetchProducts = async (category: ICategory) => {
                 description,
                 price: Math.round(parseFloat(price.replace(/[^0-9.-]+/g, ""))),
                 quantity: Math.floor(Math.random() * 100) + 1,
-                images: image ? [image] : [],
+                images,
                 category: category.id,
                 isActive: true
             };
