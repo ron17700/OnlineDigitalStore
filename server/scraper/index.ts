@@ -73,7 +73,7 @@ const fetchProducts = async (category: ICategory) => {
                 category: category.id,
                 isActive: true
             };
-            console.log("Fetched: ", elements.name);
+            console.log("Fetched:", elements.name);
 
             products.push(elements);
             await delay((Math.random() * 6000) + 1000);
