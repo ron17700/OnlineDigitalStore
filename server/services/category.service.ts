@@ -10,6 +10,14 @@ const CategoryService = {
 
         return existingCategory;
     },
+    async getCategoryByName(categoryName: string) {
+        const existingCategory: ICategory | null = await CategoryModel.findOne({ name: categoryName });
+        if (!existingCategory) {
+            throw new Error('Category not found!');
+        }
+
+        return existingCategory;
+    },
     async getCategories() {
         return await CategoryModel.find({isActive: true}).exec();
     },
