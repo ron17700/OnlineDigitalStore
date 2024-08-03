@@ -17,8 +17,6 @@ process.env.rootDir = __dirname;
 const PORT = process.env.PORT || 3001;
 const app = express();
 
-const items = process.env.CATEGORIES?.split(',') ?? [];
-
 app.use(express.json());
 app.use(cors());
 app.use(mongoSanitize());
@@ -36,7 +34,7 @@ const start = async () => {
         console.log('MongoDB connected successfully\n');
         if (process.env.SCRAPE_ON_STARTUP === 'true') {
             console.log('Scraping and saving products...\n');
-            await scrapeAndSaveProducts(items);
+            await scrapeAndSaveProducts();
             console.log('Products scraped and saved successfully\n');
         }
     } catch (error) {

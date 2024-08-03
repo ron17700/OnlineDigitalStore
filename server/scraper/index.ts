@@ -6,9 +6,11 @@ import CategoryService from '../services/category.service';
 
 const axiosInstance = axios.create({
     headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3029.110 Safari/537.3'
     }
 });
+
+const categories = ['tshirt', 'jeans', 'shoes', 'hat', 'socks'];
 
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -83,7 +85,7 @@ const fetchProducts = async (category: ICategory) => {
     }
 };
 
-const saveToMongoDB = async (products: any[]) => {
+const saveToMongoDB = async (products: any[], categoryName: string) => {
     for (const product of products) {
         try {
             await ProductService.createProduct(product);
@@ -93,22 +95,25 @@ const saveToMongoDB = async (products: any[]) => {
             console.log(`Skipped: ${product.name} - already exists`);
         }
     }
-    console.log('All products processed.');
+    console.log(`${categoryName} products processed.`);
 };
 
-const scrapeAndSaveProducts = async (categories: string[]) => {
+const scrapeAndSaveProducts = async () => {
     for (const category of categories) {
         let categoryObj = {} as ICategory;
         try {
+            console.log(`Creating category: ${category}`);
             await CategoryService.createCategory({ name: category } as any);
         }
-        catch (error) {}
+        catch (error) {
+            console.log(`Skipped: ${category} - already exists`);
+        }
         finally {
             categoryObj = await CategoryService.getCategoryByName(category);
         }
         const products = await fetchProducts(categoryObj);
         if (products && products.length > 0) {
-            await saveToMongoDB(products);
+            await saveToMongoDB(products, category);
         }
     }
 };
