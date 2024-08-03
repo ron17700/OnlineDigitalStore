@@ -70,7 +70,7 @@ const fetchProducts = async (category: string) => {
                 name,
                 description, 
                 link: `https://www.amazon.com${link}`,
-                price: parseFloat(price.replace(/[^0-9.-]+/g, "")),
+                price: Math.round(parseFloat(price.replace(/[^0-9.-]+/g, ""))),
                 quantity: Math.floor(Math.random() * 100) + 1,
                 images: image ? [image] : [],
                 category: categoryObj._id,
