@@ -33,6 +33,7 @@ export const ProductsCategorySlide: React.FC<ProductsCategorySlideProps> = ({
               price={product.price}
               quantity={product.quantity}
               img={product.images[0]}
+              _id={product._id}
             />
           );
         })}
@@ -47,6 +48,7 @@ export const ProductsCategorySlide: React.FC<ProductsCategorySlideProps> = ({
                 quantity={0}
                 img=""
                 isLoading={true}
+                _id=""
               />
             );
           })}
