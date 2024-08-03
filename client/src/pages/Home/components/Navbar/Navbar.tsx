@@ -11,7 +11,7 @@ export const Navbar: React.FC = () => {
   return (
     <div className="navbar-container">
       <div className="navbar-content-container box-shadow">
-        <OceanLogo />
+        <OceanLogo RawTextSize={40} ShoppingBagIconSize="30px"/>
         <RightNavbarContent />
       </div>
     </div>

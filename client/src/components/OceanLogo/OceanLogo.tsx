@@ -2,14 +2,19 @@ import { ShoppingBagIcon } from "@heroicons/react/24/solid";
 import { colors } from "../../styles/colors";
 import { RawText } from "../RawText/RawText";
 
-export const OceanLogo: React.FC = () => {
+type Props = {
+  ShoppingBagIconSize: string;
+  RawTextSize:number;
+};
+
+export const OceanLogo: React.FC<Props> = ({ ShoppingBagIconSize,RawTextSize }) => {
   return (
     <div className="flex align-center column-gap-8">
-      <ShoppingBagIcon color={colors.blue03} height="24px" width="24px" />
+      <ShoppingBagIcon color={colors.blue03} height={ShoppingBagIconSize} width={ShoppingBagIconSize} />
       <RawText
         text="Ocean"
         fontFamily="Courgette, cursive"
-        fontSize={40}
+        fontSize={RawTextSize}
         style={{
           userSelect: "none",
         }}
