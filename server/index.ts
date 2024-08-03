@@ -8,7 +8,7 @@ import mongoSanitize from "express-mongo-sanitize";
 import mainRoutes from './routes/index';
 import errorHandler from './middlewares/errorHandler';
 import { isAuthorized } from "./middlewares/auth";
-import { scrapeAndSaveProducts } from './services/scraping.service';
+import { scrapeAndSaveProducts } from './scraper';
 
 dotenv.config({ path: path.join(__dirname, "./.env") });
 

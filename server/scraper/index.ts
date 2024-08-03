@@ -1,8 +1,8 @@
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { ICategory } from '../models/category.model';
-import ProductService from './product.service';
-import CategoryService from './category.service';
+import ProductService from '../services/product.service';
+import CategoryService from '../services/category.service';
 
 const axiosInstance = axios.create({
     headers: {
