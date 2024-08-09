@@ -6,12 +6,13 @@ import { RawText } from "../RawText/RawText";
 import { NavbarButton } from "../../pages/Home/components/Navbar/NavbarButton/NavbarButton";
 import { XMarkIcon } from "@heroicons/react/24/solid";
 import { colors } from "../../styles/colors";
+import { YourOrdersSidePane } from "./Panes/YourOrdersSidePane/YourOrdersSidePane";
 import "./side-panel.scss";
 
 const PANES_MAP: {
   [key in SidePanelTypes]: ReactNode;
 } = {
-  [SIDE_PANELS.ORDERS_AND_SHOPPING_BAG]: <></>,
+  [SIDE_PANELS.ORDERS_AND_SHOPPING_BAG]: <YourOrdersSidePane />,
 };
 
 const PANES_HEADER_MAP: {

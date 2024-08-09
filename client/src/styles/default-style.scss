@@ -303,3 +303,18 @@
 .box-shadow {
   box-shadow: $box-shadow;
 }
+
+.centered-absolute {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.absolute {
+  position: absolute;
+}
+
+.z-index-5 {
+  z-index: 5;
+}

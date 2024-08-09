@@ -22,7 +22,6 @@
     width: 550px;
     height: 100%;
     overflow: hidden;
-    padding: 16px;
     box-sizing: border-box;
     background-color: white;
     border-top-left-radius: 24px;
@@ -40,6 +39,7 @@
       flex-direction: column;
       position: relative;
       background-color: white;
+      box-sizing: border-box;
 
       .side-pane-header-container {
         position: sticky;
@@ -48,10 +48,12 @@
         flex-direction: column;
         row-gap: 8px;
         background-color: white;
-        margin-bottom: 16px;
+        padding: 16px;
+        z-index: 1;
       }
 
       .side-pane-content {
+        padding: 0px 16px 16px 16px;
       }
     }
   }
