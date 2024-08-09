@@ -4,6 +4,8 @@ import { Home } from "./pages/Home/Home";
 import { Login } from "./pages/Login/Login";
 import "./App.scss";
 import "./styles/default-style.scss";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const ROUTES = {
   HOME: "",
@@ -27,6 +29,7 @@ export const App: React.FC = () => {
   return (
     <div className="App">
       <RouterProvider router={router} />
+      <ToastContainer />
     </div>
   );
 };

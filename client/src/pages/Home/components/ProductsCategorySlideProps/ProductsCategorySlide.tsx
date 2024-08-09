@@ -28,26 +28,15 @@ export const ProductsCategorySlide: React.FC<ProductsCategorySlideProps> = ({
           return (
             <ProductCard
               key={product._id}
-              name={product.name}
-              description={product.description}
-              price={product.price}
-              quantity={product.quantity}
-              img={product.images[0]}
+              product={product}
+              isLoading={isLoading}
             />
           );
         })}
         {isLoading &&
           Array.from({ length: 5 }).map((_, index) => {
             return (
-              <ProductCard
-                key={index}
-                name=""
-                description=""
-                price={0}
-                quantity={0}
-                img=""
-                isLoading={true}
-              />
+              <ProductCard key={index} product={null} isLoading={isLoading} />
             );
           })}
       </div>

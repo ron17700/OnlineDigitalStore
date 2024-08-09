@@ -1,0 +1,90 @@
+@import "../../../styles/colors.scss";
+
+.modalContainer {
+  min-height: 700px;
+  max-width: 500px;
+  position: relative;
+}
+
+.modalImage {
+  width: 500px;
+  height: 305px;
+  border-radius: 16px;
+  padding: 16px;
+  box-sizing: border-box;
+  object-fit: contain;
+}
+
+.modalContent {
+  padding: 15px;
+}
+
+.modalText {
+  padding-bottom: 8px;
+}
+
+.modalPrice {
+  padding-block: 8px;
+}
+
+.modalDescription {
+  padding-block: 8px;
+}
+
+.modalFooter {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  left: 0;
+}
+
+.modalActions {
+  padding: 10px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.addToCartButton {
+  width: 100%;
+  padding: 10px;
+  background: $blue-03;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.quantityButton {
+  width: 40px;
+  height: 40px;
+  background: transparent;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quantityContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #e9f7fe;
+}
+
+.quantityValue {
+  margin: 0 10px;
+  font-size: 16px;
+  font-weight: bold;
+  color: $blue-03;
+}

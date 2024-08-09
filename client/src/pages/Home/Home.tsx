@@ -6,14 +6,16 @@ import { ProductsCategorySlide } from "./components/ProductsCategorySlideProps/P
 import { useOceanRequest } from "../../Hooks/UseOceanRequest";
 import { getProducts } from "../../Requests/Product/GetProducts";
 import { Category, CATEGORY_NAMES } from "../../DataModel/Objects/Category";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Product } from "../../DataModel/Objects/Product";
 
 export const Home: React.FC = () => {
   const { isAuthenticated, isLoading } = useAuth0();
+  const navigate = useNavigate();
+  const [products, setProducts] = useState<Product[]>();
+  const [isLoadingProducts, setIsLoadingProducts] = useState(true);
 
-  const { isLoading: isLoadingProducts, response: products } = useOceanRequest({
-    params: null,
+  const getProductsRequest = useOceanRequest({
     request: getProducts,
   });
 
@@ -25,7 +27,7 @@ export const Home: React.FC = () => {
       };
     } = {};
 
-    products?.products?.forEach((product) => {
+    products?.forEach((product) => {
       const category = product.category;
       const categoryId = category?._id;
 
@@ -46,7 +48,23 @@ export const Home: React.FC = () => {
     return { productsByCategories };
   }, [products]);
 
-  const navigate = useNavigate();
+  useEffect(() => {
+    if (!isAuthenticated || isLoading) {
+      return;
+    }
+
+    getProductsRequest(null)
+      .then((response) => {
+        setProducts(response.products);
+      })
+      .catch((err) => {
+        console.error(err);
+        setProducts([]);
+      })
+      .finally(() => {
+        setIsLoadingProducts(false);
+      });
+  }, [isLoading, isAuthenticated]);
 
   if (!isAuthenticated && !isLoading) {
     navigate(`/${ROUTES.LOGIN}`);
