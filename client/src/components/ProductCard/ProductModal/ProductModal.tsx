@@ -1,22 +1,14 @@
 import { useState } from "react";
-import { useAuth0 } from "@auth0/auth0-react";
 import { colors } from "../../../styles/colors";
 import { RawText } from "../../RawText/RawText";
-import Modal from "../../Modal/Modal"; // Import the Modal component
+import Modal from "../../Modal/Modal";
 import styles from "./ProductModal.module.scss";
-import { fetchOceanRequest } from "../../../Hooks/fetchOceanRequest";
 import { getCart } from "../../../Requests/Cart/GetCart";
 import { updateCart } from "../../../Requests/Cart/UpdateCart";
-import { ICartItem } from "../../../DataModel/Objects/Cart";
-
-interface Product {
-  img: string;
-  name: string;
-  description: string;
-  price: number;
-  quantity: number;
-  _id: string;
-}
+import { Cart } from "../../../DataModel/Objects/Cart";
+import { useOceanRequest } from "../../../Hooks/UseOceanRequest";
+import { toast } from "react-toastify";
+import { Product } from "../../../DataModel/Objects/Product";
 
 interface ProductModalProps {
   isModalOpen: boolean;
@@ -29,52 +21,67 @@ export const ProductModal: React.FC<ProductModalProps> = ({
   handleCloseModal,
   product,
 }) => {
+  const [isUpdating, setIsUpdating] = useState(false);
   const [count, setCount] = useState(1);
-  const { getAccessTokenSilently } = useAuth0();
+  const getCartRequest = useOceanRequest({
+    request: getCart,
+  });
 
-  async function handleAddToCartButton(
+  const updateCartRequest = useOceanRequest({
+    request: updateCart,
+  });
+
+  const handleAddToCartButton = async (
     event: React.MouseEvent<HTMLButtonElement>
-  ): Promise<void> {
-    try {
-      const token = await getAccessTokenSilently();
-      const { isLoading: getCartLoading, response: getCartResponse } =
-        await fetchOceanRequest({
-          params: null, // replace with actual cartId
-          request: getCart,
-          token,
-        });
-
-      if (getCartResponse) {
-        console.log("Cart Response:", getCartResponse);
-
+  ) => {
+    setIsUpdating(true);
+    return getCartRequest(null)
+      .then((cart) => {
         // You can add your logic to handle the cart response here
-        const newProducts: ICartItem[] = [
-          ...getCartResponse.products,
-          { product: product, quantity: count } as unknown as ICartItem,
-        ];
+        const productsMap = new Map(
+          cart.products.map((item) => [item.product._id, item])
+        );
+        let productFromMap = productsMap.get(product._id);
 
-        const { isLoading: updateCartLoading, response: updateCartResponse } =
-          await fetchOceanRequest({
-            params: { cart: { ...getCartResponse, products: newProducts } },
-            request: updateCart,
-            token,
-          });
-
-        if (updateCartResponse) {
-          handleCloseModal();
-          //popup or smth
+        if (!productFromMap) {
+          productFromMap = {
+            product,
+            quantity: 0,
+          };
         }
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  }
+
+        productFromMap.quantity += count;
+        productsMap.set(productFromMap.product._id, productFromMap);
+
+        const newCart: Cart = {
+          ...cart,
+          products: Array.from(productsMap.values()),
+        };
+
+        updateCartRequest({
+          cart: newCart,
+        })
+          .then((response) => {
+            toast.success("Cart updated successfully");
+          })
+          .catch(() => {
+            toast.error("Failed to update cart");
+          });
+      })
+      .catch(() => {
+        toast.error("Failed to get cart");
+      })
+      .finally(() => {
+        setIsUpdating(false);
+        handleCloseModal();
+      });
+  };
 
   return (
     <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
       <div className={styles.modalContainer}>
         <img
-          src={product.img}
+          src={product.images[0]}
           alt={product.name}
           className={styles.modalImage}
         />

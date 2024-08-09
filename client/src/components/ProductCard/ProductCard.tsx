@@ -3,33 +3,33 @@ import { colors } from "../../styles/colors";
 import { RawText } from "../RawText/RawText";
 import { Squares2X2Icon } from "@heroicons/react/24/outline";
 import { Shimmer } from "../Shimmer/Shimmer";
-import Modal from "../Modal/Modal"; // Import the Modal component
-import "./product-card.scss";
 import { ProductModal } from "./ProductModal/ProductModal";
+import { Product } from "../../DataModel/Objects/Product";
+import "./product-card.scss";
 
 interface ProductCardProps {
-  img: string;
-  name: string;
-  description: string;
-  price: number;
-  quantity: number;
-  _id: string;
+  product: Product | null;
   isLoading?: boolean;
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({
-  description,
-  img,
-  name,
-  price,
-  quantity,
-  _id,
+  product,
   isLoading,
 }) => {
+  const { description, name, price, quantity, images } = product || {};
+  const img = images?.[0];
+
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleOpenModal = () => setIsModalOpen(true);
-  const handleCloseModal = () => setIsModalOpen(false);
+  const handleOpenModal = () => {
+    if (product) {
+      setIsModalOpen(true);
+    }
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
 
   return (
     <>
@@ -58,7 +58,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           ) : (
             <div className="pricing-container">
               <RawText
-                text={`${price.toLocaleString()}$`}
+                text={`${price?.toLocaleString()}$`}
                 color={colors.blue03}
                 fontSize={14}
               />
@@ -71,25 +71,20 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             <Shimmer height="20px" width="60px" />
           ) : (
             <RawText
-              text={`${quantity.toLocaleString()} left`}
+              text={`${quantity?.toLocaleString()} left`}
               color={colors.gray02}
               fontSize={14}
             />
           )}
         </div>
       </div>
-      <ProductModal
-        isModalOpen={isModalOpen}
-        handleCloseModal={handleCloseModal}
-        product={{
-          description: description,
-          img: img,
-          name: name,
-          price: price,
-          quantity: quantity,
-          _id: _id,
-        }}
-      ></ProductModal>
+      {!!product && (
+        <ProductModal
+          isModalOpen={isModalOpen}
+          handleCloseModal={handleCloseModal}
+          product={product}
+        />
+      )}
     </>
   );
 };

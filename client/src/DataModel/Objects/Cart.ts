@@ -1,22 +1,14 @@
-import { Category } from "./Category";
+import { Product } from "./Product";
 
-export interface IProduct {
-  name: string;
-  description: string;
-  price: number;
+export type CartItem = {
   quantity: number;
-  images: string[];
-  category: Category | null;
-  isActive: boolean;
-}
-
-export interface ICartItem {
-  quantity: number;
-  product: IProduct;
-}
+  product: Product;
+};
 
 export type Cart = {
   _id: string;
-  products: ICartItem[];
+  products: CartItem[];
   user: string;
+  createdAt: string;
+  updatedAt: string;
 };

@@ -1,5 +1,5 @@
 import { Address } from "./Address";
-import { ICartItem } from "./Cart";
+import { CartItem } from "./Cart";
 
 export enum OrderStatus {
   Created = "Created",
@@ -12,7 +12,7 @@ export enum OrderStatus {
 export type Order = {
   user: string;
   address: Address | null;
-  products: ICartItem[];
+  products: CartItem[];
   price: number;
   status: OrderStatus;
   isActive: boolean;

@@ -9,7 +9,10 @@
 .modalImage {
   width: 500px;
   height: 305px;
-  object-fit: cover;
+  border-radius: 16px;
+  padding: 16px;
+  box-sizing: border-box;
+  object-fit: contain;
 }
 
 .modalContent {
