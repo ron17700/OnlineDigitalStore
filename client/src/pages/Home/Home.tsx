@@ -1,6 +1,5 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate } from "react-router-dom";
-import { ROUTES } from "../../App";
 import { Navbar } from "./components/Navbar/Navbar";
 import { ProductsCategorySlide } from "./components/ProductsCategorySlideProps/ProductsCategorySlide";
 import { useOceanRequest } from "../../Hooks/UseOceanRequest";
@@ -8,6 +7,7 @@ import { getProducts } from "../../Requests/Product/GetProducts";
 import { Category, CATEGORY_NAMES } from "../../DataModel/Objects/Category";
 import { useEffect, useMemo, useState } from "react";
 import { Product } from "../../DataModel/Objects/Product";
+import { ROUTES } from "../../Types/Routes";
 
 export const Home: React.FC = () => {
   const { isAuthenticated, isLoading } = useAuth0();

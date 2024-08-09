@@ -1,20 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Home } from "./pages/Home/Home";
 import { Login } from "./pages/Login/Login";
+import { ToastContainer } from "react-toastify";
+import { SidePanelContext } from "./Contexts/SidePanelContext";
+import { ROUTES } from "./Types/Routes";
+import { SidePanelTypes } from "./Types/SidePanels";
+import { SidePanel } from "./components/SidePanel/SidePanel";
 import "./App.scss";
 import "./styles/default-style.scss";
-import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-export const ROUTES = {
-  HOME: "",
-  LOGIN: "login",
-} as const;
-
-export type Routes = (typeof ROUTES)[keyof typeof ROUTES];
-
 export const App: React.FC = () => {
+  const [activeSidePanel, setActiveSidePanel] = useState<SidePanelTypes | null>(
+    null
+  );
   const router = createBrowserRouter([
     {
       path: `/${ROUTES.HOME}`,
@@ -27,9 +27,17 @@ export const App: React.FC = () => {
   ]);
 
   return (
-    <div className="App">
-      <RouterProvider router={router} />
-      <ToastContainer />
-    </div>
+    <SidePanelContext.Provider
+      value={{
+        activeSidePanel,
+        setActiveSidePanel,
+      }}
+    >
+      <div className="App">
+        <RouterProvider router={router} />
+        <ToastContainer />
+        <SidePanel />
+      </div>
+    </SidePanelContext.Provider>
   );
 };

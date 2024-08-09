@@ -3,7 +3,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { RawText } from "../../../../../components/RawText/RawText";
 import { colors } from "../../../../../styles/colors";
 import { Separator } from "../../../../../components/Separator/Separator";
-import { ROUTES } from "../../../../../App";
+import { ROUTES } from "../../../../../Types/Routes";
 import "./user-profile-menu.scss";
 
 export const UserProfileMenu: React.FC = () => {
