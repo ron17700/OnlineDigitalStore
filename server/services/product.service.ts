@@ -42,15 +42,31 @@ const ProductService = {
 
         return { products: await productQuery.exec()};
     },
-    async getProductsGroupByCategory() {
+    async getTotalProductsByCategory() {
         return ProductModel.aggregate([
-            {$match: {isActive: true}},
+            { $match: { isActive: true } }, // Only consider active products
             {
                 $group: {
-                    _id: '$category',
-                    totalProducts: { $sum: 1 }
-                }
-            }
+                    _id: '$category', // Group by category
+                    totalProducts: { $sum: 1 }, // Count the number of products in each category
+                },
+            },
+            {
+                $lookup: {
+                    from: 'categories',
+                    localField: '_id',
+                    foreignField: '_id',
+                    as: 'categoryDetails',
+                },
+            },
+            { $unwind: '$categoryDetails' },
+            {
+                $project: {
+                    _id: 0,
+                    category: '$categoryDetails.name', // Include the category name
+                    totalProducts: 1, // Include the total number of products
+                },
+            },
         ]);
     },
     async getProduct(productId: string): Promise<IProduct | null> {

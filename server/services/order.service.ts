@@ -94,6 +94,31 @@ const OrderService = {
             await order.save({session});
         });
     },
+    async getSalesOverTime() {
+        return OrderModel.aggregate([
+            { $match: { isActive: true } },
+            {
+                $group: {
+                    _id: {
+                        date: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+                    },
+                    totalRevenue: { $sum: '$price' },
+                    totalOrders: { $sum: 1 },
+                },
+            },
+            {
+                $sort: { '_id.date': 1 },
+            },
+            {
+                $project: {
+                    _id: 0,
+                    date: '$_id.date',
+                    totalRevenue: 1,
+                    totalOrders: 1,
+                },
+            },
+        ]);
+    },
     async withTransaction<T>(callback: (session: mongoose.ClientSession) => Promise<T>): Promise<T> {
         const session = await mongoose.startSession();
         session.startTransaction();

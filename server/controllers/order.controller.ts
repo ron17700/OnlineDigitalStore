@@ -7,6 +7,7 @@ interface OrderController {
     createOrder(req: any, res: Response, next: NextFunction): Promise<Response | void>;
     updateOrder(req: any, res: Response, next: NextFunction): Promise<Response | void>;
     deleteOrder(req: any, res: Response, next: NextFunction): Promise<Response | void>;
+    getSalesOverTime(req: any, res: Response, next: NextFunction): Promise<Response | void>;
 }
 
 const OrderController: OrderController = {
@@ -27,7 +28,6 @@ const OrderController: OrderController = {
             next(error)
         }
     },
-
     async createOrder(req, res, next) {
         try {
             const order = await OrderService.createOrder(req.userId, req.isAdmin, req.body);
@@ -36,7 +36,6 @@ const OrderController: OrderController = {
             next(error)
         }
     },
-
     async updateOrder(req, res, next) {
         try {
             const {orderId} = req.params;
@@ -47,12 +46,19 @@ const OrderController: OrderController = {
             next(error);
         }
     },
-
     async deleteOrder(req, res, next) {
         try {
             const {orderId} = req.params;
             await OrderService.deleteOrder(orderId);
             res.status(200).json({message: 'Order deleted successfully'});
+        } catch (error) {
+            next(error);
+        }
+    },
+    async getSalesOverTime(req, res, next) {
+        try {
+            const salesData = await OrderService.getSalesOverTime();
+            res.status(200).json(salesData);
         } catch (error) {
             next(error);
         }
