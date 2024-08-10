@@ -9,6 +9,8 @@ import { Cart } from "../../../DataModel/Objects/Cart";
 import { useOceanRequest } from "../../../Hooks/UseOceanRequest";
 import { toast } from "react-toastify";
 import { Product } from "../../../DataModel/Objects/Product";
+import { PrimaryButton } from "../../PrimaryButton/PrimaryButton";
+import { SecondaryButton } from "../../SecondaryButton/SecondaryButton";
 
 interface ProductModalProps {
   isModalOpen: boolean;
@@ -34,6 +36,10 @@ export const ProductModal: React.FC<ProductModalProps> = ({
   const handleAddToCartButton = async (
     event: React.MouseEvent<HTMLButtonElement>
   ) => {
+    if (isUpdating) {
+      return;
+    }
+
     setIsUpdating(true);
     return getCartRequest(null)
       .then((cart) => {
@@ -112,61 +118,55 @@ export const ProductModal: React.FC<ProductModalProps> = ({
           </div>
           <div className={styles.modalFooter}>
             <div className={styles.modalActions}>
-              <button
-                className={styles.addToCartButton}
+              <PrimaryButton
+                label={`Add To Cart ${(count * product.price)
+                  .toFixed(2)
+                  .toLocaleString()}$`}
                 onClick={handleAddToCartButton}
-              >
-                <RawText
-                  text={"Add To Cart"}
-                  color={colors.white}
-                  fontSize={16}
-                  fontWeight={600}
-                />
-                <RawText
-                  text={`${count * product.price}$`}
-                  color={colors.white}
-                  fontSize={16}
-                  fontWeight={600}
-                />
-              </button>
-              <div className={styles.quantityContainer}>
-                <button
-                  className={styles.quantityButton}
-                  onClick={() => {
-                    if (count > 1) {
-                      setCount(count - 1);
-                    }
-                  }}
-                >
-                  <RawText
-                    text={"-"}
-                    color={colors.blue03}
-                    fontSize={16}
-                    fontWeight={600}
-                  />
-                </button>
-                <div className={styles.quantityValue}>
-                  <RawText
-                    text={count.toString()}
-                    color={colors.blue03}
-                    fontSize={16}
-                    fontWeight={600}
-                  />
-                </div>
-                <button
-                  className={styles.quantityButton}
-                  onClick={() => {
-                    setCount(count + 1);
-                  }}
-                >
-                  <RawText
-                    text={"+"}
-                    color={colors.blue03}
-                    fontSize={16}
-                    fontWeight={600}
-                  />
-                </button>
-              </div>
+                disabled={isUpdating}
+              />
+
+              <SecondaryButton
+                style={{
+                  flex: "unset",
+                  width: "fit-content",
+                  cursor: "default",
+                }}
+                label={
+                  <div className="flex align-center column-gap-16">
+                    <RawText
+                      text={"-"}
+                      color={colors.blue03}
+                      fontSize={16}
+                      fontWeight={600}
+                      onClick={() => {
+                        if (count > 1) {
+                          setCount(count - 1);
+                        }
+                      }}
+                    />
+                    <div className={styles.quantityValue}>
+                      <RawText
+                        text={count.toString()}
+                        color={colors.blue03}
+                        fontSize={16}
+                        fontWeight={600}
+                      />
+                    </div>
+                    <RawText
+                      text={"+"}
+                      color={colors.blue03}
+                      fontSize={16}
+                      fontWeight={600}
+                      onClick={() => {
+                        if (count < product.quantity) {
+                          setCount(count + 1);
+                        }
+                      }}
+                    />
+                  </div>
+                }
+              />
             </div>
           </div>
         </div>
