@@ -54,7 +54,7 @@ export const ShoppingCart: React.FC<ShoppingCartProps> = ({
   return (
     <div className="flex layout-column row-gap-16">
       {getContent()}
-      {!isLoading && (
+      {!isLoading && !!cart?.products.length && (
         <PrimaryButton
           label={`Checkout: ${itemsTotal}$`}
           onClick={() => {

@@ -8,24 +8,22 @@ import { OrderItemCard } from "./OrderItemCard/OrderItemCard";
 const sortOrders = (orders: Order[]): Order[] => {
   return orders.sort((a, b) => {
     const statusOrder: { [key in OrderStatus]?: number } = {
-      [ORDER_STATUSES.Cancelled]: 0,
-      [ORDER_STATUSES.Delivered]: 0,
+      [ORDER_STATUSES.Cancelled]: 1,
+      [ORDER_STATUSES.Delivered]: 2,
     };
 
-    const statusAIndex = statusOrder[a.status] || -1;
-    const statusBIndex = statusOrder[b.status] || -1;
+    const statusAIndex = statusOrder[a.status] || 0;
+    const statusBIndex = statusOrder[b.status] || 0;
 
     if (statusAIndex !== statusBIndex) {
-      if (statusAIndex === -1) return -1;
-      if (statusBIndex === -1) return 1;
       return statusAIndex - statusBIndex;
     }
 
     // Sorting by createdAt (newest first)
-    const dateA = new Date(a.createdAt);
-    const dateB = new Date(b.createdAt);
+    const dateA = new Date(a.createdAt).getTime();
+    const dateB = new Date(b.createdAt).getTime();
 
-    return dateB.getTime() - dateA.getTime();
+    return dateB - dateA;
   });
 };
 
@@ -43,6 +41,7 @@ export const Orders: React.FC<OrdersProps> = ({
   cancelOrder,
 }) => {
   const sortedOrders = sortOrders(orders);
+  console.log(sortedOrders);
 
   const getContent = () => {
     if (isLoading) {
