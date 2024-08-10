@@ -5,7 +5,7 @@ import {IProductQuery} from "../models/product.model";
 interface ProductController {
     getProduct(req: Request, res: Response, next: NextFunction): Promise<Response | void>;
     getProducts(req: Request, res: Response, next: NextFunction): Promise<Response | void>;
-    getProductsGroupByCategory(req: Request, res: Response, next: NextFunction): Promise<Response | void>;
+    getTotalProductsByCategory(req: Request, res: Response, next: NextFunction): Promise<Response | void>;
     createProduct(req: Request, res: Response, next: NextFunction): Promise<Response | void>;
     updateProduct(req: Request, res: Response, next: NextFunction): Promise<Response | void>;
     deleteProduct(req: Request, res: Response, next: NextFunction): Promise<Response | void>;
@@ -29,9 +29,9 @@ const ProductController: ProductController = {
             next(error);
         }
     },
-    async getProductsGroupByCategory(req, res, next) {
+    async getTotalProductsByCategory(req, res, next) {
         try {
-            const products = await ProductService.getProductsGroupByCategory();
+            const products = await ProductService.getTotalProductsByCategory();
             return res.json(products);
         } catch (error) {
             next(error);
