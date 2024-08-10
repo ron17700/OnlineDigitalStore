@@ -1,4 +1,4 @@
-import { Cart, CartItem } from "../../../../../../DataModel/Objects/Cart";
+import { CartItem } from "../../../../../../DataModel/Objects/Cart";
 import { colors } from "../../../../../../styles/colors";
 import { RawText } from "../../../../../RawText/RawText";
 import { Shimmer } from "../../../../../Shimmer/Shimmer";
@@ -6,7 +6,7 @@ import { TrashIcon } from "@heroicons/react/16/solid";
 import "./cart-item-card.scss";
 
 type CartItemCardProps = {
-  cartItem: Cart["products"][0] | null;
+  cartItem: CartItem | null;
   isLoading: boolean;
   removeItem: (cartItem: CartItem) => void;
 };
