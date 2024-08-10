@@ -10,6 +10,7 @@ export enum OrderStatus {
 }
 
 export type Order = {
+  _id: string;
   user: string;
   address: Address | null;
   products: CartItem[];

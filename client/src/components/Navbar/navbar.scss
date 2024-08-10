@@ -1,0 +1,59 @@
+@import "../../styles/colors.scss";
+
+.navbar-container {
+  position: sticky;
+  top: 0px;
+  z-index: 3;
+  height: 70px;
+
+  .navbar-content-container {
+    height: 100%;
+    margin-block-end: 0px;
+    background-color: $white;
+    padding: 0px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.logo-link {
+  text-decoration: none;  // Remove underline
+  color: inherit;         // Inherit color from parent, so it doesn't change
+  display: inline-block;  // Ensure it behaves like a block-level element if needed
+}
+
+.button-style {
+  padding: 0 20px;  // No vertical padding, only horizontal
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  height: 100%;  // Ensure the button takes the full height of the container
+  display: flex;
+  align-items: center;
+  
+  &.active {
+    color: $blue-03;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 3px;  // Thicker line for better visibility
+      background-color: $blue-03;
+      animation: slideIn 0.3s ease-out;  // Animation for the bottom line
+    }
+  }
+}
+
+@keyframes slideIn {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
