@@ -5,10 +5,12 @@ import { getProduct } from "../../Requests/Product/GetProduct";
 import { updateProduct } from "../../Requests/Product/UpdateProduct";
 import { createProduct } from "../../Requests/Product/CreateProduct";
 import { getCategories } from "../../Requests/Category/GetCategories"; // Assuming you have a getCategories request
-import { Product } from "../../DataModel/Objects/Product";
+import { ProductI } from "../../DataModel/Objects/Product";
 import { Category } from "../../DataModel/Objects/Category";
 import { toast } from "react-toastify";
 import { useOceanRequest } from "../../Hooks/UseOceanRequest";
+import { RawText } from "../RawText/RawText";
+import { colors } from "../../styles/colors";
 
 interface ProductFormModalProps {
   isModalOpen: boolean;
@@ -23,7 +25,7 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({
   productId,
   onRefresh,
 }) => {
-  const [data, setData] = useState<Product>({
+  const [data, setData] = useState<ProductI>({
     _id: "",
     name: "",
     description: "",
@@ -51,7 +53,7 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({
       setIsLoading(true);
       getProductRequest({ productId: productId })
         .then((response) => {
-          setData(response);
+          setData(response as ProductI);
         })
         .catch((err) => {
           console.error(err);
@@ -125,7 +127,7 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedCategory = categories.find(category => category._id === e.target.value);
-    setData({ ...data, category: selectedCategory || null });
+    setData({ ...data, category: selectedCategory?._id || null });
 
     if (errors.category) {
       setErrors({ ...errors, category: "" });
@@ -136,7 +138,7 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({
     if (!validate()) return;
   
     try {
-      const categoryId = data.category?._id || null; // Extract the category ID
+      const categoryId = data.category; // Extract the category ID
   
       const productPayload = {
         ...data,
@@ -192,14 +194,14 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({
     <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
       <div className={styles.modalContainer}>
         <div className={styles.modalContent}>
-          <h2>{productId ? "Edit Product" : "Add Product"}</h2>
+          <RawText text={productId ? "Edit Product" : "Add Product"} fontSize={24} fontWeight={800} style={{paddingBlock:'10px'}}/>
 
           {isLoading ? (
             <div className={styles.loadingText}>Loading product data...</div>
           ) : (
             <>
               <div className={styles.formGroup}>
-                <label>Name</label>
+                <RawText text={'Name'}/>
                 <input
                   type="text"
                   name="name"
@@ -213,7 +215,7 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({
               </div>
 
               <div className={styles.formGroup}>
-                <label>Description</label>
+                <RawText text={'Description'}/>
                 <textarea
                   name="description"
                   value={data.description}
@@ -226,7 +228,7 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({
               </div>
 
               <div className={styles.formGroup}>
-                <label>Price</label>
+                <RawText text={'Price'}/>
                 <input
                   type="number"
                   name="price"
@@ -240,7 +242,7 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({
               </div>
 
               <div className={styles.formGroup}>
-                <label>Quantity</label>
+                <RawText text={'Quantity'}/>
                 <input
                   type="number"
                   name="quantity"
@@ -254,7 +256,7 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({
               </div>
 
               <div className={styles.formGroup}>
-                <label>Image URL</label>
+                <RawText text={'Image URL'}/> 
                 <input
                   type="text"
                   name="images"
@@ -273,15 +275,15 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({
               </div>
 
               <div className={styles.formGroup}>
-                <label>Category</label>
+                <RawText text={'Category'}/>
                 <select
                   name="category"
-                  value={data.category?._id || ""}
+                  value={data.category || ""}
                   onChange={handleCategoryChange}
                   className={errors.category ? styles.errorInput : ""}
                 >
                   <option value="" disabled>
-                    Select a category
+                    <RawText text={'Select a category'}/> 
                   </option>
                   {categories.map((category) => (
                     <option key={category._id} value={category._id}>
@@ -295,7 +297,7 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({
               </div>
 
               <button onClick={handleSubmit} className={styles.submitButton}>
-                Submit
+                <RawText text={'Submit'} fontSize={16} fontWeight={700} color={colors.white}/> 
               </button>
             </>
           )}

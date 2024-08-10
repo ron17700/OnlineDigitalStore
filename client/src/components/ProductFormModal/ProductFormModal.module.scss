@@ -3,7 +3,7 @@
 .modalContainer {
   padding: 20px;
   width: 500px;
-  height: 600px;
+  min-height: 600px;
 }
 
 .modalContent {
@@ -16,11 +16,6 @@
   width: 100%;  // Ensure the form group takes full width
 }
 
-.formGroup label {
-  display: block;
-  font-weight: bold;
-}
-
 .formGroup input,
 .formGroup textarea {
   width: 100%;  // Make the input and textarea take full width of the parent
@@ -29,6 +24,11 @@
   border: 1px solid #ccc;
   border-radius: 4px;
   box-sizing: border-box;  // Ensure padding and borders are included in the width
+  font-family: Nunito, sans-serif;
+}
+
+.input{
+  font-family: Nunito, sans-serif;
 }
 
 .formGroup input[type="checkbox"] {
