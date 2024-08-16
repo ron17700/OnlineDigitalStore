@@ -2,14 +2,16 @@ import { Order } from "../../DataModel/Objects/Order";
 import { baseOceanRequest, OCEAN_METHODS } from "../Requests";
 import { BaseRequestParams } from "../Types/BaseRequestParams";
 
-export type GetOrdersRequestParams = {} & BaseRequestParams;
+type GetOrderRequestParams = BaseRequestParams;
 
-export const getOrders = async (params: GetOrdersRequestParams) => {
+export const getOrders = async (
+  params: GetOrderRequestParams
+): Promise<Order[]> => {
   const { token } = params;
 
-  return baseOceanRequest<{ orders: Order[] }>({
+  return baseOceanRequest({
     method: OCEAN_METHODS.GET,
-    path: "/order",
+    path: `/order`,
     token: token,
   });
 };

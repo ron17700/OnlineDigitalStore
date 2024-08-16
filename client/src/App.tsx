@@ -10,7 +10,6 @@ import { SidePanel } from "./components/SidePanel/SidePanel";
 import "./App.scss";
 import "./styles/default-style.scss";
 import "react-toastify/dist/ReactToastify.css";
-import { AdminPanel } from "./pages/AdminPanel/AdminPanel";
 
 export const App: React.FC = () => {
   const [activeSidePanel, setActiveSidePanel] = useState<SidePanelTypes | null>(
@@ -20,10 +19,6 @@ export const App: React.FC = () => {
     {
       path: `/${ROUTES.HOME}`,
       element: <Home />,
-    },
-    {
-      path: `/${ROUTES.ADMIN}`,
-      element: <AdminPanel />,
     },
     {
       path: `/${ROUTES.LOGIN}`,

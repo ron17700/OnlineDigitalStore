@@ -9,7 +9,7 @@ type DeleteProductRequestParams = {
 export const deleteProduct = async (params: DeleteProductRequestParams) => {
   const { productId, token } = params;
 
-  return baseOceanRequest<any>({
+  return baseOceanRequest({
     method: OCEAN_METHODS.DELETE,
     path: `/product/${productId}`,
     token: token,
