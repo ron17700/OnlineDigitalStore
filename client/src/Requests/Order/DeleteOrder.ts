@@ -1,4 +1,3 @@
-import { Order } from "../../DataModel/Objects/Order";
 import { baseOceanRequest, OCEAN_METHODS } from "../Requests";
 import { BaseRequestParams } from "../Types/BaseRequestParams";
 
@@ -9,7 +8,7 @@ type DeleteOrderRequestParams = {
 export const deleteOrder = async (params: DeleteOrderRequestParams) => {
   const { orderId, token } = params;
 
-  return baseOceanRequest({
+  return baseOceanRequest<boolean>({
     method: OCEAN_METHODS.DELETE,
     path: `/order/${orderId}`,
     token: token,
