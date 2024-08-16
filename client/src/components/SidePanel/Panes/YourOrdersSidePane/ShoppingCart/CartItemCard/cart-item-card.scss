@@ -1,0 +1,24 @@
+@import "../../../../../../styles/colors.scss";
+
+.cart-item-card-container {
+  width: 100%;
+  border-radius: 16px;
+  box-sizing: border-box;
+  padding: 16px;
+  display: flex;
+  border: 1px solid $gray-04;
+  row-gap: 32px;
+  flex-direction: column;
+}
+
+.remove-button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  height: 24px;
+  width: 24px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background-color: $gray-05;
+}

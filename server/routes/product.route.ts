@@ -6,10 +6,7 @@ import ProductController from "../controllers/product.controller";
 const router: Router = Router();
 
 router.get("/", ProductController.getProducts);
-router.get(
-  "/grouped-by-category",
-  ProductController.getProductsGroupByCategory
-);
+router.get("/by-category", isAdmin, ProductController.getTotalProductsByCategory);
 router.get("/:productId", ProductController.getProduct);
 router.post("/", isAdmin, ProductController.createProduct);
 router.put("/:productId", isAdmin, ProductController.updateProduct);
