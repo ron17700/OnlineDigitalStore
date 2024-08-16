@@ -3,24 +3,17 @@ import { baseOceanRequest, OCEAN_METHODS } from "../Requests";
 import { BaseRequestParams } from "../Types/BaseRequestParams";
 
 type UpdateOrderRequestParams = {
-  order: Order;
+  order: Partial<Omit<Order, "_id" | "createdAt" | "updatedAt" | "__v">>;
+  orderId: string;
 } & BaseRequestParams;
 
-export const updateOrder = async (
-  params: UpdateOrderRequestParams
-): Promise<Order> => {
-  const { token, order } = params;
+export const updateOrders = async (params: UpdateOrderRequestParams) => {
+  const { token, order, orderId } = params;
 
-  const body: any = {
-    ...order,
-  };
-
-  body.address = order.address?._id;
-
-  return baseOceanRequest({
+  return baseOceanRequest<Order>({
     method: OCEAN_METHODS.PUT,
-    path: `/order/${order._id}`,
+    body: order,
+    path: `/order/${orderId}`,
     token: token,
-    body: body,
   });
 };

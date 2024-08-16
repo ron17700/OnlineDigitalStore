@@ -3,15 +3,15 @@ import { baseOceanRequest, OCEAN_METHODS } from "../Requests";
 import { BaseRequestParams } from "../Types/BaseRequestParams";
 
 type CreateOrderRequestParams = {
-  cart: Omit<Order, "_id" | "createdAt" | "updatedAt" | "__v">;
+  order: Omit<Order, "_id" | "createdAt" | "updatedAt" | "__v">;
 } & BaseRequestParams;
 
 export const createOrder = async (params: CreateOrderRequestParams) => {
-  const { token, cart } = params;
+  const { token, order } = params;
 
   return baseOceanRequest<Order>({
     method: OCEAN_METHODS.POST,
-    body: cart,
+    body: order,
     path: "/order",
     token: token,
   });

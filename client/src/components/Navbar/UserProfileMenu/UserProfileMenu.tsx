@@ -1,13 +1,15 @@
 import React from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { RawText } from "../../../../../components/RawText/RawText";
-import { colors } from "../../../../../styles/colors";
-import { Separator } from "../../../../../components/Separator/Separator";
-import { ROUTES } from "../../../../../Types/Routes";
+import { RawText } from "../../../components/RawText/RawText";
+import { colors } from "../../../styles/colors";
+import { Separator } from "../../../components/Separator/Separator";
+import { ROUTES } from "../../../Types/Routes";
 import "./user-profile-menu.scss";
+import { useNavigate } from "react-router-dom";
 
 export const UserProfileMenu: React.FC = () => {
   const { user, logout } = useAuth0();
+  const navigate = useNavigate(); // Use the useNavigate hook
 
   return (
     <div
@@ -29,6 +31,17 @@ export const UserProfileMenu: React.FC = () => {
             <RawText text="Profile" color={colors.gray02} fontSize={16} />
             <RawText text={user?.name} />
           </div>
+        </div>
+      </div>
+      <Separator />
+      <div className="logout-container">
+        <div
+          className="logout-container-content"
+          onClick={() => {
+            navigate(`/${ROUTES.ADMIN}`); // Navigate to /Admin when clicked
+          }}
+        >
+          <RawText text="Admin Panel" />
         </div>
       </div>
       <Separator />
