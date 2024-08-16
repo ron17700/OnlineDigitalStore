@@ -8,15 +8,17 @@ const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 
+const authorizationParams = {
+  redirect_uri: window.location.origin,
+  audience: "https://online-store-cs",
+};
+
 root.render(
   <React.StrictMode>
     <Auth0Provider
       domain="dev-dkqfydoceubyxu30.us.auth0.com"
       clientId="nugjipUQ5ojLab9HQXzDzfQBkDEF0ZF1"
-      authorizationParams={{
-        redirect_uri: window.location.origin,
-        audience: "https://online-store-cs",
-      }}
+      authorizationParams={authorizationParams}
     >
       <App />
     </Auth0Provider>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { OceanLogo } from "../../../../components/OceanLogo/OceanLogo";
 import { TooltipContentWrapper } from "../../../../components/TooltipContentWrapper/TooltipContentWrapper";
 import { colors } from "../../../../styles/colors";
@@ -7,6 +7,8 @@ import { NavbarButton } from "./NavbarButton/NavbarButton";
 import { ShoppingCartIcon, UserIcon } from "@heroicons/react/24/outline";
 import { MagnifyingGlassIcon } from "@heroicons/react/16/solid";
 import { OceanInput } from "../../../../components/OceanInput/OceanInput";
+import { SidePanelContext } from "../../../../Contexts/SidePanelContext";
+import { SIDE_PANELS } from "../../../../Types/SidePanels";
 import "./navbar.scss";
 
 export const Navbar: React.FC = () => {
@@ -14,7 +16,7 @@ export const Navbar: React.FC = () => {
   return (
     <div className="navbar-container">
       <div className="navbar-content-container box-shadow">
-        <OceanLogo RawTextSize={40} ShoppingBagIconSize="30px"/>
+        <OceanLogo RawTextSize={40} ShoppingBagIconSize="30px" />
         <div
           style={{
             width: "500px",
@@ -41,6 +43,7 @@ export const Navbar: React.FC = () => {
 
 const RightNavbarContent: React.FC = () => {
   const [userProfileVisible, setUserProfileVisible] = useState(false);
+  const { setActiveSidePanel } = useContext(SidePanelContext);
 
   return (
     <div className="flex align-center column-gap-16">
@@ -66,7 +69,9 @@ const RightNavbarContent: React.FC = () => {
         icon={
           <ShoppingCartIcon height="20px" width="20px" color={colors.gray01} />
         }
-        onClick={() => {}}
+        onClick={() => {
+          setActiveSidePanel(SIDE_PANELS.ORDERS_AND_SHOPPING_BAG);
+        }}
       />
     </div>
   );

@@ -4,7 +4,7 @@ import { useCallback } from "react";
 
 type UseOceanRequestParams<
   TParams extends object | null = null,
-  RequestResponseType extends object | null = null,
+  RequestResponseType extends object | null | boolean = null,
   TFunctionParams = BaseRequestParams & TParams
 > = {
   request: (params: TFunctionParams) => Promise<RequestResponseType>;
@@ -12,7 +12,7 @@ type UseOceanRequestParams<
 
 export const useOceanRequest = <
   TParams extends object | null = null,
-  RequestResponseType extends object | null = null
+  RequestResponseType extends object | null | boolean = null
 >({
   request,
 }: UseOceanRequestParams<TParams, RequestResponseType>) => {
