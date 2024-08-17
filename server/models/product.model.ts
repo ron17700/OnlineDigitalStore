@@ -14,7 +14,7 @@ export interface IProductQuery {
     search?: string;
     minPrice?: number;
     maxPrice?: number;
-    categoryId?: string;
+    categories?: string;
     inStock?: 'true' | 'false';
     sortBy?: 'name:asc' | 'name:desc' | 'price:asc' | 'price:desc';
 }

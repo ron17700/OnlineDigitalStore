@@ -1,5 +1,6 @@
 import ProductModel, {IProduct, IProductQuery} from '../models/product.model';
 import CategoryService from "./category.service";
+import CategoryModel from "../models/category.model";
 
 const ProductService = {
     async getProducts(query: IProductQuery): Promise<{ products: IProduct[] }> {
@@ -19,8 +20,14 @@ const ProductService = {
             filter.price = { ...filter.price, $lte: Number(query.maxPrice) };
         }
 
-        if (query.categoryId) {
-            filter.category = query.categoryId;
+        if (query.categories) {
+            let categoryNames = JSON.parse(query.categories);
+            if (!Array.isArray(categoryNames)) {
+                throw new Error('Categories should be an array!');
+            }
+            const categories = await CategoryModel.find({ name: { $in: categoryNames } });
+            const categoryIds = categories.map(category => category._id);
+            filter.category = { $in: categoryIds };
         }
 
         if (query.inStock === 'true') {
