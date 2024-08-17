@@ -16,7 +16,7 @@ export const ProductsTab: React.FC = () => {
 
   const fetchProducts = () => {
     setIsLoadingProducts(true);
-    getProductsRequest(null)
+    getProductsRequest({})
       .then((response) => {
         setProducts(response.products);
       })

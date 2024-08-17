@@ -2,11 +2,18 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate } from "react-router-dom";
 import { ProductsCategorySlide } from "./components/ProductsCategorySlideProps/ProductsCategorySlide";
 import { useOceanRequest } from "../../Hooks/UseOceanRequest";
-import { getProducts } from "../../Requests/Product/GetProducts";
-import { Category } from "../../DataModel/Objects/Category";
-import { useEffect, useMemo, useState } from "react";
+import {
+  getProducts,
+  GetProductsRequestParams,
+} from "../../Requests/Product/GetProducts";
+import {
+  Category,
+  MOCK_CATEGORY_NAMES,
+} from "../../DataModel/Objects/Category";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Product } from "../../DataModel/Objects/Product";
 import { ROUTES } from "../../Types/Routes";
+import { FiltersPane } from "./components/FiltersPane/FiltersPane";
 import { Navbar } from "../../components/Navbar/Navbar";
 
 export const Home: React.FC = () => {
@@ -19,24 +26,32 @@ export const Home: React.FC = () => {
     request: getProducts,
   });
 
+  const fetchProducts = useCallback(
+    async (params: Omit<GetProductsRequestParams, "token"> = {}) => {
+      setIsLoadingProducts(true);
+
+      return getProductsRequest(params)
+        .then((response) => {
+          setProducts(response.products);
+        })
+        .catch((err) => {
+          console.error(err);
+          setProducts([]);
+        })
+        .finally(() => {
+          setIsLoadingProducts(false);
+        });
+    },
+    [getProductsRequest, setProducts, setIsLoadingProducts]
+  );
+
   useEffect(() => {
     if (!isAuthenticated || isLoading) {
       return;
     }
 
-    // Fetch products
-    getProductsRequest(null)
-      .then((response) => {
-        setProducts(response.products);
-      })
-      .catch((err) => {
-        console.error(err);
-        setProducts([]);
-      })
-      .finally(() => {
-        setIsLoadingProducts(false);
-      });
-  }, [isLoading, isAuthenticated]);
+    fetchProducts();
+  }, [isLoading, isAuthenticated, fetchProducts]);
 
   const { productsByCategories } = useMemo(() => {
     const productsByCategories: {
@@ -45,25 +60,25 @@ export const Home: React.FC = () => {
         products: Product[];
       };
     } = {};
-  
+
     products?.forEach((product) => {
       const category = product.category;
       const categoryId = category?._id;
-  
+
       if (!categoryId || !category.isActive) {
         return;
       }
-  
+
       if (!productsByCategories[categoryId]) {
         productsByCategories[categoryId] = {
           category,
           products: [],
         };
       }
-  
+
       productsByCategories[categoryId].products.push(product);
     });
-  
+
     return { productsByCategories };
   }, [products]);
 
@@ -79,25 +94,29 @@ export const Home: React.FC = () => {
   return (
     <div>
       <Navbar />
-      <div className="flex layout-column row-gap-24">
-        {Object.values(productsByCategories).map(({ category, products }) => {
-          return (
-            <ProductsCategorySlide
-              categoryName={category.name}
-              products={products}
-              isLoading={isLoadingProducts}
-            />
-          );
-        })}
-         {isLoadingProducts &&
-          [1, 2, 3, 4, 5].map((_, index) => (
-            <ProductsCategorySlide
-              key={`placeholder-${index}`}
-              categoryName={" "}
-              products={[]}
-              isLoading={true}
-            />
-          ))}
+      <div className="flex column-gap-24 relative">
+        <FiltersPane fetchProducts={fetchProducts} />
+        <div className="flex layout-column row-gap-24 overflow-hidden">
+          {Object.values(productsByCategories).map(({ category, products }) => {
+            return (
+              <ProductsCategorySlide
+                categoryName={category.name}
+                products={products}
+                isLoading={isLoadingProducts}
+              />
+            );
+          })}
+          {isLoadingProducts &&
+            Object.values(MOCK_CATEGORY_NAMES).map((categoryName) => {
+              return (
+                <ProductsCategorySlide
+                  categoryName={categoryName}
+                  products={[]}
+                  isLoading={true}
+                />
+              );
+            })}
+        </div>
       </div>
     </div>
   );

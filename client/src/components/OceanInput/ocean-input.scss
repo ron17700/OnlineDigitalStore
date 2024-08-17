@@ -18,7 +18,7 @@
     align-items: center;
     justify-content: center;
     height: 100%;
-    transform: translateX(75%);
+    transform: translateX(-75%);
   }
 
   .ocean-input {
@@ -50,4 +50,11 @@
     box-shadow: transparent 0px 0px 0px 3px;
     background: rgba(32, 33, 37, 0.12);
   }
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }

@@ -9,9 +9,10 @@ import { MagnifyingGlassIcon } from "@heroicons/react/16/solid";
 import { OceanInput } from "../../components/OceanInput/OceanInput";
 import { SidePanelContext } from "../../Contexts/SidePanelContext";
 import { SIDE_PANELS } from "../../Types/SidePanels";
-import "./navbar.scss";
 import { Link, useLocation } from "react-router-dom";
 import { RawText } from "../RawText/RawText";
+import { NAVBAR_HEIGHT } from "./constants";
+import "./navbar.scss";
 
 interface NavbarProps {
   tabIndex?: number;
@@ -23,7 +24,12 @@ export const Navbar: React.FC<NavbarProps> = (props) => {
   const location = useLocation();
 
   return (
-    <div className="navbar-container">
+    <div
+      className="navbar-container"
+      style={{
+        height: `${NAVBAR_HEIGHT}px`,
+      }}
+    >
       <div className="navbar-content-container box-shadow">
         <Link to={"/"} className="logo-link">
           <OceanLogo RawTextSize={40} ShoppingBagIconSize="30px" />
