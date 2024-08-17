@@ -85,7 +85,8 @@ const ProductService = {
 
         const updatedProduct = await ProductModel.findOneAndUpdate(
             { _id: productId },
-            product
+            product,
+            {new: true}
         );
         if (!updatedProduct) {
             throw new Error('Product not found!');
