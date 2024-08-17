@@ -1,4 +1,4 @@
-export const CATEGORY_NAMES = {
+export const MOCK_CATEGORY_NAMES = {
   ELECTRONICS: "electronics",
   CLOTHING: "clothing",
   HOME: "home",
@@ -10,12 +10,9 @@ export const CATEGORY_NAMES = {
   TOOLS: "tools",
 } as const;
 
-export type CategoryNames =
-  (typeof CATEGORY_NAMES)[keyof typeof CATEGORY_NAMES];
-
 export type Category = {
   _id: string;
-  name: CategoryNames;
+  name: string;
   icon: string;
   isActive: boolean;
   createdAt: string;

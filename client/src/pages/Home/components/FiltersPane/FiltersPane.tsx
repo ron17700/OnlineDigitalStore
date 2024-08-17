@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { NAVBAR_HEIGHT } from "../Navbar/constants";
 import { useOceanRequest } from "../../../../Hooks/UseOceanRequest";
 import { getCategories } from "../../../../Requests/Category/GetCategories";
 import { Category } from "../../../../DataModel/Objects/Category";
@@ -8,31 +7,16 @@ import {
   AdjustmentsHorizontalIcon,
   CurrencyDollarIcon,
 } from "@heroicons/react/24/outline";
-import { NavbarButton } from "../Navbar/NavbarButton/NavbarButton";
 import { colors } from "../../../../styles/colors";
 import { getClassName } from "../../../../Utils/getClassName";
 import { RawText } from "../../../../components/RawText/RawText";
 import "./filters-pane.scss";
 import { Separator } from "../../../../components/Separator/Separator";
-import { getCategoryTranslation } from "../../../../translations/categories";
 import { SecondaryButton } from "../../../../components/SecondaryButton/SecondaryButton";
 import { PrimaryButton } from "../../../../components/PrimaryButton/PrimaryButton";
 import { GetProductsRequestParams } from "../../../../Requests/Product/GetProducts";
-
-// export const CATEGORY_NAMES = {
-//   ELECTRONICS: "electronics",
-//   CLOTHING: "clothing",
-//   HOME: "home",
-//   SPORTS: "sports",
-//   FOOD: "food",
-//   BOOKS: "books",
-//   TOYS: "toys",
-//   GAMES: "games",
-//   TOOLS: "tools",
-// } as const;
-
-// export type CategoryNames =
-//   (typeof CATEGORY_NAMES)[keyof typeof CATEGORY_NAMES];
+import { NAVBAR_HEIGHT } from "../../../../components/Navbar/constants";
+import { NavbarButton } from "../../../../components/Navbar/NavbarButton/NavbarButton";
 
 type FiltersPaneProps = {
   fetchProducts: (
@@ -180,7 +164,6 @@ export const FiltersPane: React.FC<FiltersPaneProps> = ({ fetchProducts }) => {
           >
             {categories?.map((category) => {
               const isSelected = selectedCategories.includes(category);
-              const title = getCategoryTranslation(category.name);
 
               const onCategoryClick = () => {
                 if (isSelected) {
@@ -204,7 +187,7 @@ export const FiltersPane: React.FC<FiltersPaneProps> = ({ fetchProducts }) => {
                     value={category._id}
                     onChange={onCategoryClick}
                   />
-                  <RawText text={title} />
+                  <RawText text={category.name} />
                 </div>
               );
             })}

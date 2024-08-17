@@ -1,0 +1,78 @@
+.table-container {
+    width: 100%;
+    margin: 20px auto;
+    border-collapse: collapse;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  th {
+    background-color: #f2f2f2;
+    color: black;
+  }
+  
+  td.image-column, th.image-column {
+    width: 50px; /* Set the width of the image column */
+    max-width: 50px;
+    overflow: hidden;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  td.action-column, th.action-column {
+    max-width: 100px;
+    width: 100px;
+    overflow: hidden;
+    text-align: center;
+    white-space: nowrap; /* Prevent text from wrapping */
+  }
+  
+  .action-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .product-image {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+  
+  .pagination {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .pagination button {
+    padding: 5px 10px;
+    margin: 0 5px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .pagination button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+  
+  .pagination select {
+    margin-left: 10px;
+    padding: 5px;
+  }
+  

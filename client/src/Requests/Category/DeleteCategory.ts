@@ -5,7 +5,7 @@ type DeleteCategoryRequestParams = {
   categoryId: string;
 } & BaseRequestParams;
 
-export const deleteCategory = async (params: DeleteCategoryRequestParams) => {
+export const deleteCategory = async (params: DeleteCategoryRequestParams): Promise<boolean | object | null> => {
   const { categoryId, token } = params;
 
   return baseOceanRequest({
