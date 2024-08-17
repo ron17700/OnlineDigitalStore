@@ -5,6 +5,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../Types/Routes";
 import { OrdersTab } from "./OrdersTab/OrdersTab";
+import { AnalyticsTab } from "./ AnalyticsTab/AnalyticsTab";
 
 export const AdminPanel: React.FC = () => {
   const { isAuthenticated, isLoading } = useAuth0();
@@ -19,7 +20,7 @@ export const AdminPanel: React.FC = () => {
       case 2:
         return <ProductsTab/>
       case 3:
-        return <div>Content for Tab 3</div>;
+        return <AnalyticsTab/>
       default:
         return <div>Default Content</div>;
     }
