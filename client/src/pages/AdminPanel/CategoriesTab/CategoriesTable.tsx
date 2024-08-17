@@ -1,61 +1,58 @@
 import React, { useState } from "react";
 import GenericTable from "../../../components/GenericTable/GenericTable";
-import { Order } from "../../../DataModel/Objects/Order"; // You will need to define this type
+import { Category } from "../../../DataModel/Objects/Category";
 import { RawText } from "../../../components/RawText/RawText";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/solid";
 import { colors } from "../../../styles/colors";
-import { OrderFormModal } from "../../../components/OrderFormModal/OrderFormModal"; // You will need to create this component
+import { CategoryFormModal } from "../../../components/CategoryFormModal/CategoryFormModal";
 import { useOceanRequest } from "../../../Hooks/UseOceanRequest";
-import { deleteOrder } from "../../../Requests/Order/DeleteOrder"; // You will need to create this request
+import { deleteCategory } from "../../../Requests/Category/DeleteCategory";
 
-interface OrdersTableProps {
-  data: Order[];
+interface CategoriesTableProps {
+  data: Category[];
   onRefresh: () => void;
 }
 
-const OrdersTable: React.FC<OrdersTableProps> = ({ data, onRefresh }) => {
+const CategoriesTable: React.FC<CategoriesTableProps> = ({ data, onRefresh }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
 
-  const deleteOrderRequest = useOceanRequest({ request: deleteOrder });
+  const deleteCategoryRequest = useOceanRequest({ request: deleteCategory });
 
   function handleCloseModal() {
     setIsModalOpen(false);
-    setSelectedOrderId(null);
+    setSelectedCategoryId(null);
   }
 
-  function handleEditClick(orderId: string) {
-    setSelectedOrderId(orderId);
+  function handleEditClick(categoryId: string) {
+    setSelectedCategoryId(categoryId);
     setIsModalOpen(true);
   }
 
-  function handleAddOrderClick() {
-    setSelectedOrderId(null);
+  function handleAddCategoryClick() {
+    setSelectedCategoryId(null);
     setIsModalOpen(true);
   }
 
-  function handleDeleteClick(orderId: string) {
-    if (window.confirm("Are you sure you want to delete this order?")) {
-      deleteOrderRequest({ orderId })
+  function handleDeleteClick(categoryId: string) {
+    if (window.confirm("Are you sure you want to delete this category?")) {
+      deleteCategoryRequest({ categoryId })
         .then(() => {
           onRefresh();
         })
         .catch((err) => {
           console.error(err);
-          alert("Failed to delete order.");
+          alert("Failed to delete category.");
         });
     }
   }
 
   const columns = [
-    { field: "orderNumber" as keyof Order, label: "Order Number" },
-    { field: "customerName" as keyof Order, label: "Customer Name" },
-    { field: "totalAmount" as keyof Order, label: "Total Amount" },
-    { field: "status" as keyof Order, label: "Status" },
+    { field: "name" as keyof Category, label: "Name" },
     {
-      field: "_id" as keyof Order,
+      field: "_id" as keyof Category,
       label: "",
-      render: (_: any, item: Order) => (
+      render: (_: any, item: Category) => (
         <div
         className="action-buttons"
           style={{
@@ -102,10 +99,10 @@ const OrdersTable: React.FC<OrdersTableProps> = ({ data, onRefresh }) => {
 
   return (
     <div style={{ paddingBlock: "16px", paddingInline: "32px" }}>
-      <OrderFormModal
+      <CategoryFormModal
         isModalOpen={isModalOpen}
         handleCloseModal={handleCloseModal}
-        orderId={selectedOrderId}
+        categoryId={selectedCategoryId}
         onRefresh={onRefresh}
       />
       <div
@@ -115,7 +112,7 @@ const OrdersTable: React.FC<OrdersTableProps> = ({ data, onRefresh }) => {
           justifyContent: "space-between",
         }}
       >
-        <RawText text={"Orders Table"} fontSize={28} fontWeight={700} />
+        <RawText text={"Categories Table"} fontSize={28} fontWeight={700} />
         <button
           style={{
             backgroundColor: colors.blue02,
@@ -132,10 +129,10 @@ const OrdersTable: React.FC<OrdersTableProps> = ({ data, onRefresh }) => {
           onMouseOut={(e) =>
             (e.currentTarget.style.backgroundColor = colors.blue02)
           }
-          onClick={handleAddOrderClick}
+          onClick={handleAddCategoryClick}
         >
           <RawText
-            text={"Add Order"}
+            text={"Add Category"}
             color={colors.white}
             fontSize={16}
             fontWeight={700}
@@ -147,4 +144,4 @@ const OrdersTable: React.FC<OrdersTableProps> = ({ data, onRefresh }) => {
   );
 };
 
-export default OrdersTable;
+export default CategoriesTable;

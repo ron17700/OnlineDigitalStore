@@ -106,7 +106,7 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({
     if (!data.name) newErrors.name = "Name is required";
     if (!data.description) newErrors.description = "Description is required";
     if (data.price <= 0) newErrors.price = "Price must be greater than 0";
-    if (data.quantity < 0) newErrors.quantity = "Quantity cannot be negative";
+    if (data.quantity <= 0) newErrors.quantity = "Quantity cannot be negative";
     if (!data.images[0]) newErrors.images = "At least one image URL is required";
     if (!data.category) newErrors.category = "Category is required";
 
@@ -189,6 +189,12 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({
       toast.error("Failed to authenticate.");
     }
   };
+
+  useEffect(() => {
+    if (isModalOpen) {
+      setErrors({});
+    }
+  }, [isModalOpen]);
 
   return (
     <Modal isOpen={isModalOpen} onClose={handleCloseModal}>

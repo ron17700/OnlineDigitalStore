@@ -7,7 +7,7 @@ type UpdateOrderRequestParams = {
   orderId: string;
 } & BaseRequestParams;
 
-export const updateOrders = async (params: UpdateOrderRequestParams) => {
+export const updateOrder = async (params: UpdateOrderRequestParams) => {
   const { token, order, orderId } = params;
 
   return baseOceanRequest<Order>({

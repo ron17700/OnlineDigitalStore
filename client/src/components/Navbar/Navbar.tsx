@@ -107,6 +107,23 @@ export const Navbar: React.FC<NavbarProps> = (props) => {
                 fontWeight={700}
               />
             </button>
+            <button
+              className={`button-style ${
+                props.tabIndex === 4 ? "active animate" : ""
+              }`}
+              onClick={() => {
+                if (props.setTabIndex) {
+                  props.setTabIndex(4);
+                }
+              }}
+            >
+              <RawText
+                text={`Categories`}
+                color={props.tabIndex === 4 ? colors.blue03 : undefined}
+                fontSize={14}
+                fontWeight={700}
+              />
+            </button>
           </div>
         ) : null}
         <RightNavbarContent />

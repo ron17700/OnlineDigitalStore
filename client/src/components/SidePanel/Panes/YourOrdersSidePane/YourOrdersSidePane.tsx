@@ -45,7 +45,7 @@ export const YourOrdersSidePane: React.FC = () => {
 
     getOrdersRequest(null)
       .then((res) => {
-        setOrders(res);
+        setOrders(res.orders);
       })
       .catch((err) => {
         setOrders([]);
@@ -115,6 +115,7 @@ export const YourOrdersSidePane: React.FC = () => {
     setOrders(newOrders);
 
     cancelOrderRequest({
+      orderId:newOrder._id,
       order: newOrder,
     })
       .then((response) => {})
