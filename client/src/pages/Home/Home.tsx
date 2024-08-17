@@ -3,11 +3,15 @@ import { useNavigate } from "react-router-dom";
 import { Navbar } from "./components/Navbar/Navbar";
 import { ProductsCategorySlide } from "./components/ProductsCategorySlideProps/ProductsCategorySlide";
 import { useOceanRequest } from "../../Hooks/UseOceanRequest";
-import { getProducts } from "../../Requests/Product/GetProducts";
+import {
+  getProducts,
+  GetProductsRequestParams,
+} from "../../Requests/Product/GetProducts";
 import { Category, CATEGORY_NAMES } from "../../DataModel/Objects/Category";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Product } from "../../DataModel/Objects/Product";
 import { ROUTES } from "../../Types/Routes";
+import { FiltersPane } from "./components/FiltersPane/FiltersPane";
 
 export const Home: React.FC = () => {
   const { isAuthenticated, isLoading } = useAuth0();
@@ -48,23 +52,32 @@ export const Home: React.FC = () => {
     return { productsByCategories };
   }, [products]);
 
+  const fetchProducts = useCallback(
+    async (params: Omit<GetProductsRequestParams, "token"> = {}) => {
+      setIsLoadingProducts(true);
+
+      return getProductsRequest(params)
+        .then((response) => {
+          setProducts(response.products);
+        })
+        .catch((err) => {
+          console.error(err);
+          setProducts([]);
+        })
+        .finally(() => {
+          setIsLoadingProducts(false);
+        });
+    },
+    [getProductsRequest, setProducts, setIsLoadingProducts]
+  );
+
   useEffect(() => {
     if (!isAuthenticated || isLoading) {
       return;
     }
 
-    getProductsRequest(null)
-      .then((response) => {
-        setProducts(response.products);
-      })
-      .catch((err) => {
-        console.error(err);
-        setProducts([]);
-      })
-      .finally(() => {
-        setIsLoadingProducts(false);
-      });
-  }, [isLoading, isAuthenticated]);
+    fetchProducts();
+  }, [isLoading, isAuthenticated, fetchProducts]);
 
   if (!isAuthenticated && !isLoading) {
     navigate(`/${ROUTES.LOGIN}`);
@@ -78,26 +91,29 @@ export const Home: React.FC = () => {
   return (
     <div>
       <Navbar />
-      <div className="flex layout-column row-gap-24">
-        {Object.values(productsByCategories).map(({ category, products }) => {
-          return (
-            <ProductsCategorySlide
-              categoryName={category.name}
-              products={products}
-              isLoading={isLoadingProducts}
-            />
-          );
-        })}
-        {isLoadingProducts &&
-          Object.values(CATEGORY_NAMES).map((categoryName) => {
+      <div className="flex column-gap-24 relative">
+        <FiltersPane fetchProducts={fetchProducts} />
+        <div className="flex layout-column row-gap-24 overflow-hidden">
+          {Object.values(productsByCategories).map(({ category, products }) => {
             return (
               <ProductsCategorySlide
-                categoryName={categoryName}
-                products={[]}
-                isLoading={true}
+                categoryName={category.name}
+                products={products}
+                isLoading={isLoadingProducts}
               />
             );
           })}
+          {isLoadingProducts &&
+            Object.values(CATEGORY_NAMES).map((categoryName) => {
+              return (
+                <ProductsCategorySlide
+                  categoryName={categoryName}
+                  products={[]}
+                  isLoading={true}
+                />
+              );
+            })}
+        </div>
       </div>
     </div>
   );

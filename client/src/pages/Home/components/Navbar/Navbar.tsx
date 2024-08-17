@@ -9,12 +9,18 @@ import { MagnifyingGlassIcon } from "@heroicons/react/16/solid";
 import { OceanInput } from "../../../../components/OceanInput/OceanInput";
 import { SidePanelContext } from "../../../../Contexts/SidePanelContext";
 import { SIDE_PANELS } from "../../../../Types/SidePanels";
+import { NAVBAR_HEIGHT } from "./constants";
 import "./navbar.scss";
 
 export const Navbar: React.FC = () => {
   const [searchValue, setSearchValue] = useState("");
   return (
-    <div className="navbar-container">
+    <div
+      className="navbar-container"
+      style={{
+        height: `${NAVBAR_HEIGHT}px`,
+      }}
+    >
       <div className="navbar-content-container box-shadow">
         <OceanLogo RawTextSize={40} ShoppingBagIconSize="30px" />
         <div
