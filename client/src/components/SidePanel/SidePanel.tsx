@@ -3,11 +3,11 @@ import { SIDE_PANELS, SidePanelTypes } from "../../Types/SidePanels";
 import { SidePanelContext } from "../../Contexts/SidePanelContext";
 import { getClassName } from "../../Utils/getClassName";
 import { RawText } from "../RawText/RawText";
-import { NavbarButton } from "../../pages/Home/components/Navbar/NavbarButton/NavbarButton";
+import { NavbarButton } from "../../components/Navbar/NavbarButton/NavbarButton";
 import { XMarkIcon } from "@heroicons/react/24/solid";
 import { colors } from "../../styles/colors";
-import { YourOrdersSidePane } from "./Panes/YourOrdersSidePane/YourOrdersSidePane";
 import "./side-panel.scss";
+import { YourOrdersSidePane } from "./Panes/YourOrdersSidePane/YourOrdersSidePane";
 
 const PANES_MAP: {
   [key in SidePanelTypes]: ReactNode;

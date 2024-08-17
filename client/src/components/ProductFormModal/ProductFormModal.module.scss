@@ -1,0 +1,64 @@
+@import "../../styles/colors.scss";
+
+.modalContainer {
+  padding: 20px;
+  width: 500px;
+  min-height: 600px;
+  display: flex;            // Add this
+  flex-direction: column;   // Add this
+}
+
+.modalContent {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;  // Use this instead of height: 100%;
+}
+
+.formGroup {
+  margin-bottom: 15px;
+  width: 100%;  // Ensure the form group takes full width
+}
+
+.formGroup input,
+.formGroup textarea {
+  width: 100%;  // Make the input and textarea take full width of the parent
+  padding: 8px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;  // Ensure padding and borders are included in the width
+  font-family: Nunito, sans-serif;
+}
+
+.input{
+  font-family: Nunito, sans-serif;
+}
+
+.formGroup input[type="checkbox"] {
+  width: auto;
+}
+
+.errorInput {
+  border-color: red;
+}
+
+.errorText {
+  color: red;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.submitButton {
+  padding: 10px 20px;
+  background-color: $blue-02;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: $blue-01;
+  }
+}

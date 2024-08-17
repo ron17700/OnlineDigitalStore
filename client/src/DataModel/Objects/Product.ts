@@ -13,3 +13,5 @@ export type Product = {
   updatedAt: string;
   __v: number;
 };
+
+export type ProductWithCategoryID = Omit<Product, 'category'> & { category: string | null };

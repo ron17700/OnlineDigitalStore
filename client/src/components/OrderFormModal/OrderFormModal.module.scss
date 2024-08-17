@@ -1,0 +1,67 @@
+@import "../../styles/colors.scss";
+
+.modalContainer {
+  padding: 20px;
+  width: 500px;
+  min-height: 600px;
+  display: flex;
+  flex-direction: column;
+}
+
+.modalContent {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.formGroup {
+  margin-bottom: 15px;
+  width: 100%;
+}
+
+.formGroup input,
+.formGroup textarea {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-family: Nunito, sans-serif;
+}
+
+.input {
+  font-family: Nunito, sans-serif;
+}
+
+.errorInput {
+  border-color: red;
+}
+
+.errorText {
+  color: red;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.submitButtonContainer {
+  margin-top: auto; /* Pushes the button to the bottom */
+  display: flex;
+  width: 100%;
+  justify-content: center; /* Aligns the button to the right */
+}
+
+.submitButton {
+  padding: 10px 20px;
+  width: 100%;
+  background-color: $blue-02;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: $blue-01;
+  }
+}

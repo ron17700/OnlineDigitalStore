@@ -1,12 +1,10 @@
 import { ProductCard } from "../../../../components/ProductCard/ProductCard";
 import { RawText } from "../../../../components/RawText/RawText";
-import { CategoryNames } from "../../../../DataModel/Objects/Category";
 import { Product } from "../../../../DataModel/Objects/Product";
-import { getCategoryTranslation } from "../../../../translations/categories";
 import "./products-category-slide.scss";
 
 interface ProductsCategorySlideProps {
-  categoryName: CategoryNames;
+  categoryName: string;
   products: Product[];
   isLoading?: boolean;
 }
@@ -16,12 +14,11 @@ export const ProductsCategorySlide: React.FC<ProductsCategorySlideProps> = ({
   products,
   isLoading,
 }) => {
-  const translatedCategory = getCategoryTranslation(categoryName);
 
   return (
     <div className="products-category-slide-container">
       <div className="category-title-container">
-        <RawText text={translatedCategory} fontWeight={700} fontSize={28} />
+        <RawText text={categoryName} fontWeight={700} fontSize={28} />
       </div>
       <div className="products-container flex-100 overflow-x-scroll flex column-gap-16">
         {products.map((product) => {
