@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { ProductsCategorySlide } from "./components/ProductsCategorySlideProps/ProductsCategorySlide";
 import { useOceanRequest } from "../../Hooks/UseOceanRequest";
 import { getProducts } from "../../Requests/Product/GetProducts";
-import { getCategories } from "../../Requests/Category/GetCategories";
 import { Category } from "../../DataModel/Objects/Category";
 import { useEffect, useMemo, useState } from "react";
 import { Product } from "../../DataModel/Objects/Product";
@@ -14,16 +13,10 @@ export const Home: React.FC = () => {
   const { isAuthenticated, isLoading } = useAuth0();
   const navigate = useNavigate();
   const [products, setProducts] = useState<Product[]>();
-  const [categories, setCategories] = useState<Category[]>([]);
   const [isLoadingProducts, setIsLoadingProducts] = useState(true);
-  const [isLoadingCategories, setIsLoadingCategories] = useState(true);
 
   const getProductsRequest = useOceanRequest({
     request: getProducts,
-  });
-
-  const getCategoriesRequest = useOceanRequest({
-    request: getCategories,
   });
 
   useEffect(() => {
@@ -42,19 +35,6 @@ export const Home: React.FC = () => {
       })
       .finally(() => {
         setIsLoadingProducts(false);
-      });
-
-    // Fetch categories
-    getCategoriesRequest(null)
-      .then((response) => {
-        setCategories(response);
-      })
-      .catch((err) => {
-        console.error(err);
-        setCategories([]);
-      })
-      .finally(() => {
-        setIsLoadingCategories(false);
       });
   }, [isLoading, isAuthenticated]);
 
@@ -92,7 +72,7 @@ export const Home: React.FC = () => {
     return null;
   }
 
-  if (isLoading || isLoadingCategories) {
+  if (isLoading) {
     return <div>Loading...</div>;
   }
 
@@ -109,6 +89,15 @@ export const Home: React.FC = () => {
             />
           );
         })}
+         {isLoadingProducts &&
+          [1, 2, 3, 4, 5].map((_, index) => (
+            <ProductsCategorySlide
+              key={`placeholder-${index}`}
+              categoryName={" "}
+              products={[]}
+              isLoading={true}
+            />
+          ))}
       </div>
     </div>
   );

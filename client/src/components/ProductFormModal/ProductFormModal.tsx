@@ -5,7 +5,7 @@ import { getProduct } from "../../Requests/Product/GetProduct";
 import { updateProduct } from "../../Requests/Product/UpdateProduct";
 import { createProduct } from "../../Requests/Product/CreateProduct";
 import { getCategories } from "../../Requests/Category/GetCategories"; // Assuming you have a getCategories request
-import { ProductI } from "../../DataModel/Objects/Product";
+import { ProductWithCategoryID } from "../../DataModel/Objects/Product";
 import { Category } from "../../DataModel/Objects/Category";
 import { toast } from "react-toastify";
 import { useOceanRequest } from "../../Hooks/UseOceanRequest";
@@ -25,7 +25,7 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({
   productId,
   onRefresh,
 }) => {
-  const [data, setData] = useState<ProductI>({
+  const [data, setData] = useState<ProductWithCategoryID>({
     _id: "",
     name: "",
     description: "",
@@ -53,7 +53,7 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({
       setIsLoading(true);
       getProductRequest({ productId: productId })
         .then((response) => {
-          setData(response as ProductI);
+          setData(response as ProductWithCategoryID);
         })
         .catch((err) => {
           console.error(err);
