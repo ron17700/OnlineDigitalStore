@@ -5,7 +5,7 @@ import {
 } from "../../../../../DataModel/Objects/Order";
 import { OrderItemCard } from "./OrderItemCard/OrderItemCard";
 
-const sortOrders = (orders: Order[] = []): Order[] => {
+const sortOrders = (orders: Order[]): Order[] => {
   return orders.sort((a, b) => {
     const statusOrder: { [key in OrderStatus]?: number } = {
       [ORDER_STATUSES.Cancelled]: 1,
@@ -36,7 +36,7 @@ type OrdersProps = {
 
 export const Orders: React.FC<OrdersProps> = ({
   isLoading,
-  orders = [],
+  orders,
   removeOrder,
   cancelOrder,
 }) => {

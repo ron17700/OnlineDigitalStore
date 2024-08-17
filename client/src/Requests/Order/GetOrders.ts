@@ -7,7 +7,7 @@ export type GetOrdersRequestParams = {} & BaseRequestParams;
 export const getOrders = async (params: GetOrdersRequestParams) => {
   const { token } = params;
 
-  return baseOceanRequest<{ orders: Order[] }>({
+  return baseOceanRequest<Order[]>({
     method: OCEAN_METHODS.GET,
     path: "/order",
     token: token,

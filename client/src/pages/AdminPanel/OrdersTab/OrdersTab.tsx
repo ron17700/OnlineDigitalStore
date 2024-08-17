@@ -18,7 +18,7 @@ export const OrdersTab: React.FC = () => {
     setIsLoadingOrders(true);
     getOrdersRequest(null)
       .then((response) => {
-        setOrders(response.orders);
+        setOrders(response);
       })
       .catch((err) => {
         console.error(err);

@@ -48,10 +48,24 @@ const OrdersTable: React.FC<OrdersTableProps> = ({ data, onRefresh }) => {
   }
 
   const columns = [
-    { field: "orderNumber" as keyof Order, label: "Order Number" },
-    { field: "customerName" as keyof Order, label: "Customer Name" },
-    { field: "totalAmount" as keyof Order, label: "Total Amount" },
-    { field: "status" as keyof Order, label: "Status" },
+    { field: "_id"  as keyof Order, label: "Order Number" },
+    {
+      field: "address" as keyof Order,
+      label: "Address",
+      render: (_: any, item: Order) => (
+      <div>
+        {`${item.address?.country ?? ""}, ${item.address?.state ?? ""}, ${item.address?.city ?? ""}, ${item.address?.street ?? ""}, ${item.address?.postalCode ?? ""}`}
+        </div>
+      ),
+    },
+    { field: "price" as keyof Order, label: "Price",
+      render: (_: any, item: Order) => (
+        <div>
+         {item.price + '$'}
+          </div>
+        ),
+     },
+    { field: "status"  as keyof Order, label: "Status" },
     {
       field: "_id" as keyof Order,
       label: "",
@@ -116,31 +130,6 @@ const OrdersTable: React.FC<OrdersTableProps> = ({ data, onRefresh }) => {
         }}
       >
         <RawText text={"Orders Table"} fontSize={28} fontWeight={700} />
-        <button
-          style={{
-            backgroundColor: colors.blue02,
-            color: "#fff",
-            padding: "10px 20px",
-            borderRadius: "8px",
-            border: "none",
-            cursor: "pointer",
-            transition: "background-color 0.3s ease",
-          }}
-          onMouseOver={(e) =>
-            (e.currentTarget.style.backgroundColor = colors.blue01)
-          }
-          onMouseOut={(e) =>
-            (e.currentTarget.style.backgroundColor = colors.blue02)
-          }
-          onClick={handleAddOrderClick}
-        >
-          <RawText
-            text={"Add Order"}
-            color={colors.white}
-            fontSize={16}
-            fontWeight={700}
-          />
-        </button>
       </div>
       <GenericTable columns={columns} data={data} />
     </div>

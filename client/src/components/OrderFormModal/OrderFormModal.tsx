@@ -83,7 +83,7 @@ export const OrderFormModal: React.FC<OrderFormModalProps> = ({
         // Update order logic
         const requestData = {
           orderId: data._id,
-          order: { status: data.status }, // Only update the status field
+          order: { ...data,status: data.status },
         };
 
         updateOrderRequest(requestData)
@@ -131,21 +131,21 @@ export const OrderFormModal: React.FC<OrderFormModalProps> = ({
               </div>
 
               <div className={styles.formGroup}>
-                <RawText text={"Customer Name"} />
+                <RawText text={"Address"} />
                 <input
                   type="text"
-                  name="customerName"
-                  value={data.user}
+                  name="Address"
+                  value={`${data.address?.country ?? ""}, ${data.address?.state ?? ""}, ${data.address?.city ?? ""}, ${data.address?.street ?? ""}, ${data.address?.postalCode ?? ""}`}
                   disabled
                   className={styles.disabledInput}
                 />
               </div>
 
               <div className={styles.formGroup}>
-                <RawText text={"Total Amount"} />
+                <RawText text={"Price"} />
                 <input
                   type="number"
-                  name="totalAmount"
+                  name="price"
                   value={data.price}
                   disabled
                   className={styles.disabledInput}
