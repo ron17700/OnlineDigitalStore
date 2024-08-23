@@ -1,3 +1,17 @@
+const generateQueryString = (params: {
+  [key: string]: string | number | boolean | undefined;
+}): string => {
+  const queryString = Object.entries(params)
+    .filter(([_, value]) => value !== undefined)
+    .map(
+      ([key, value]) =>
+        `${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`
+    )
+    .join("&");
+
+  return queryString ? `?${queryString}` : "";
+};
+
 export const OCEAN_METHODS = {
   GET: "GET",
   POST: "POST",
@@ -12,15 +26,18 @@ type RequestParams = {
   method: Methods;
   body?: { [key: string]: any };
   token: string;
+  query?: { [key: string]: string | number | boolean | undefined };
 };
 
 export const baseOceanRequest = async <T>(
   params: RequestParams
 ): Promise<T> => {
-  const { path, method, body, token } = params;
+  const { path, method, body, token, query = {} } = params;
+
+  const queryString = generateQueryString(query);
 
   try {
-    const request = new Request(`http://localhost:3001${path}`, {
+    const request = new Request(`http://localhost:3001${path}${queryString}`, {
       method,
       headers: new Headers({
         "Content-Type": "application/json",

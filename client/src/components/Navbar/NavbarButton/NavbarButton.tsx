@@ -2,15 +2,17 @@ import "./navbar-button.scss";
 
 interface NavbarButtonProps {
   icon: React.ReactNode;
-  onClick: () => void;
+  onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  style?: React.CSSProperties;
 }
 
 export const NavbarButton: React.FC<NavbarButtonProps> = ({
   icon,
   onClick,
+  style,
 }) => {
   return (
-    <button className="navbar-button-container" onClick={onClick}>
+    <button className="navbar-button-container" onClick={onClick} style={style}>
       {icon}
     </button>
   );

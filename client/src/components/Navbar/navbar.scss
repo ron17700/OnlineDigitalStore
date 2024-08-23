@@ -4,7 +4,6 @@
   position: sticky;
   top: 0px;
   z-index: 3;
-  height: 70px;
 
   .navbar-content-container {
     height: 100%;
@@ -18,33 +17,33 @@
 }
 
 .logo-link {
-  text-decoration: none;  // Remove underline
-  color: inherit;         // Inherit color from parent, so it doesn't change
-  display: inline-block;  // Ensure it behaves like a block-level element if needed
+  text-decoration: none; // Remove underline
+  color: inherit; // Inherit color from parent, so it doesn't change
+  display: inline-block; // Ensure it behaves like a block-level element if needed
 }
 
 .button-style {
-  padding: 0 20px;  // No vertical padding, only horizontal
+  padding: 0 20px; // No vertical padding, only horizontal
   background: transparent;
   border: none;
   cursor: pointer;
   position: relative;
-  height: 100%;  // Ensure the button takes the full height of the container
+  height: 100%; // Ensure the button takes the full height of the container
   display: flex;
   align-items: center;
-  
+
   &.active {
     color: $blue-03;
 
     &::after {
-      content: '';
+      content: "";
       position: absolute;
       bottom: 0;
       left: 0;
       right: 0;
-      height: 3px;  // Thicker line for better visibility
+      height: 3px; // Thicker line for better visibility
       background-color: $blue-03;
-      animation: slideIn 0.3s ease-out;  // Animation for the bottom line
+      animation: slideIn 0.3s ease-out; // Animation for the bottom line
     }
   }
 }

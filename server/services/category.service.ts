@@ -25,13 +25,16 @@ const CategoryService = {
         return await CategoryModel.create(category);
     },
     async updateCategory(categoryId: string, category: ICategory) {
-        let existingCategory: ICategory | null = await categoryModel.findById(categoryId).exec();
-        if (!existingCategory) {
+        const updatedCategory = await categoryModel.findOneAndUpdate(
+            { _id: categoryId },
+            category,
+            {new: true}
+        );
+        if (!updatedCategory) {
             throw new Error('Category not found!');
         }
 
-        existingCategory = category
-        return await existingCategory.save();
+        return updatedCategory;
     },
     async deleteCategory(categoryId: string) {
         const existingCategory: ICategory | null = await categoryModel.findById(categoryId).exec();

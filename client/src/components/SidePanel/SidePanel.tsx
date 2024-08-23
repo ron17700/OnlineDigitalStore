@@ -7,11 +7,12 @@ import { NavbarButton } from "../../components/Navbar/NavbarButton/NavbarButton"
 import { XMarkIcon } from "@heroicons/react/24/solid";
 import { colors } from "../../styles/colors";
 import "./side-panel.scss";
+import { YourOrdersSidePane } from "./Panes/YourOrdersSidePane/YourOrdersSidePane";
 
 const PANES_MAP: {
   [key in SidePanelTypes]: ReactNode;
 } = {
-  [SIDE_PANELS.ORDERS_AND_SHOPPING_BAG]: <div />,
+  [SIDE_PANELS.ORDERS_AND_SHOPPING_BAG]: <YourOrdersSidePane />,
 };
 
 const PANES_HEADER_MAP: {

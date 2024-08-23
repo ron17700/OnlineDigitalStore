@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../Types/Routes";
 import { OrdersTab } from "./OrdersTab/OrdersTab";
 import { AnalyticsTab } from "./ AnalyticsTab/AnalyticsTab";
+import { CategoriesTab } from "./CategoriesTab/CategoriesTab";
 
 export const AdminPanel: React.FC = () => {
   const { isAuthenticated, isLoading } = useAuth0();
@@ -16,11 +17,13 @@ export const AdminPanel: React.FC = () => {
   const renderContent = () => {
     switch (tabIndex) {
       case 1:
-        return <OrdersTab/>;
+        return <OrdersTab />;
       case 2:
-        return <ProductsTab/>
+        return <ProductsTab />;
       case 3:
         return <AnalyticsTab/>
+      case 4:
+        return <CategoriesTab/>;
       default:
         return <div>Default Content</div>;
     }
@@ -33,7 +36,7 @@ export const AdminPanel: React.FC = () => {
 
   return (
     <div style={{ height: "100%", display: "flex", flexDirection: "column" }}>
-      <Navbar setTabIndex={setTabIndex} tabIndex={tabIndex}/>
+      <Navbar setTabIndex={setTabIndex} tabIndex={tabIndex} />
       <div className="flex layout-column row-gap-24" style={{ flexGrow: 1 }}>
         {renderContent()}
       </div>

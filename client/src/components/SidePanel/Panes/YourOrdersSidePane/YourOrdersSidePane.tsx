@@ -115,6 +115,7 @@ export const YourOrdersSidePane: React.FC = () => {
     setOrders(newOrders);
 
     cancelOrderRequest({
+      orderId:newOrder._id,
       order: newOrder,
     })
       .then((response) => {})
