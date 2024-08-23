@@ -17,10 +17,16 @@ import "./navbar.scss";
 interface NavbarProps {
   tabIndex?: number;
   setTabIndex?: React.Dispatch<React.SetStateAction<number>>;
+  searchValue?: string;
+  setSearchValue?: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export const Navbar: React.FC<NavbarProps> = (props) => {
-  const [searchValue, setSearchValue] = useState("");
+export const Navbar: React.FC<NavbarProps> = ({
+  searchValue,
+  setSearchValue,
+  setTabIndex,
+  tabIndex,
+}) => {
   const location = useLocation();
 
   return (
@@ -40,18 +46,20 @@ export const Navbar: React.FC<NavbarProps> = (props) => {
               width: "500px",
             }}
           >
-            <OceanInput
-              onChange={setSearchValue}
-              placeholder="Search for products..."
-              value={searchValue}
-              leftIcon={
-                <MagnifyingGlassIcon
-                  height="16px"
-                  width="16px"
-                  color={colors.gray02}
-                />
-              }
-            />
+            {setSearchValue && (
+              <OceanInput
+                onChange={setSearchValue}
+                placeholder="Search for products..."
+                value={searchValue || ""}
+                leftIcon={
+                  <MagnifyingGlassIcon
+                    height="16px"
+                    width="16px"
+                    color={colors.gray02}
+                  />
+                }
+              />
+            )}
           </div>
         ) : location.pathname === "/admin" ? (
           <div
@@ -64,68 +72,68 @@ export const Navbar: React.FC<NavbarProps> = (props) => {
           >
             <button
               className={`button-style ${
-                props.tabIndex === 1 ? "active animate" : ""
+                tabIndex === 1 ? "active animate" : ""
               }`}
               onClick={() => {
-                if (props.setTabIndex) {
-                  props.setTabIndex(1);
+                if (setTabIndex) {
+                  setTabIndex(1);
                 }
               }}
             >
               <RawText
                 text={`Orders`}
-                color={props.tabIndex === 1 ? colors.blue03 : undefined}
+                color={tabIndex === 1 ? colors.blue03 : undefined}
                 fontSize={14}
                 fontWeight={700}
               />
             </button>
             <button
               className={`button-style ${
-                props.tabIndex === 2 ? "active animate" : ""
+                tabIndex === 2 ? "active animate" : ""
               }`}
               onClick={() => {
-                if (props.setTabIndex) {
-                  props.setTabIndex(2);
+                if (setTabIndex) {
+                  setTabIndex(2);
                 }
               }}
             >
               <RawText
                 text={`Products`}
-                color={props.tabIndex === 2 ? colors.blue03 : undefined}
+                color={tabIndex === 2 ? colors.blue03 : undefined}
                 fontSize={14}
                 fontWeight={700}
               />
             </button>
             <button
               className={`button-style ${
-                props.tabIndex === 3 ? "active animate" : ""
+                tabIndex === 3 ? "active animate" : ""
               }`}
               onClick={() => {
-                if (props.setTabIndex) {
-                  props.setTabIndex(3);
+                if (setTabIndex) {
+                  setTabIndex(3);
                 }
               }}
             >
               <RawText
                 text={`Analytics`}
-                color={props.tabIndex === 3 ? colors.blue03 : undefined}
+                color={tabIndex === 3 ? colors.blue03 : undefined}
                 fontSize={14}
                 fontWeight={700}
               />
             </button>
             <button
               className={`button-style ${
-                props.tabIndex === 4 ? "active animate" : ""
+                tabIndex === 4 ? "active animate" : ""
               }`}
               onClick={() => {
-                if (props.setTabIndex) {
-                  props.setTabIndex(4);
+                if (setTabIndex) {
+                  setTabIndex(4);
                 }
               }}
             >
               <RawText
                 text={`Categories`}
-                color={props.tabIndex === 4 ? colors.blue03 : undefined}
+                color={tabIndex === 4 ? colors.blue03 : undefined}
                 fontSize={14}
                 fontWeight={700}
               />

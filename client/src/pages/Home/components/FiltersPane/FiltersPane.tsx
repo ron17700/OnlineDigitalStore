@@ -19,33 +19,42 @@ import { NAVBAR_HEIGHT } from "../../../../components/Navbar/constants";
 import { NavbarButton } from "../../../../components/Navbar/NavbarButton/NavbarButton";
 
 type FiltersPaneProps = {
-  fetchProducts: (
-    params?: Omit<GetProductsRequestParams, "token">
-  ) => Promise<void>;
+  categories: Category[];
+
+  minPrice: number | undefined;
+  maxPrice: number | undefined;
+  selectedCategories: Category[];
+  inStock: boolean;
+  currentFilters?: Omit<GetProductsRequestParams, "token">;
+
+  setMinPrice: React.Dispatch<React.SetStateAction<number | undefined>>;
+  setMaxPrice: React.Dispatch<React.SetStateAction<number | undefined>>;
+  setSelectedCategories: React.Dispatch<React.SetStateAction<Category[]>>;
+  setInStock: React.Dispatch<React.SetStateAction<boolean>>;
+  setCurrentFilters: React.Dispatch<
+    React.SetStateAction<Omit<GetProductsRequestParams, "token"> | undefined>
+  >;
+
+  fetchProducts: (clearFilters?: boolean) => Promise<void>;
 };
 
 const paneWidth = 300;
 
-export const FiltersPane: React.FC<FiltersPaneProps> = ({ fetchProducts }) => {
+export const FiltersPane: React.FC<FiltersPaneProps> = ({
+  fetchProducts,
+  categories,
+  inStock,
+  maxPrice,
+  minPrice,
+  selectedCategories,
+  currentFilters,
+  setMaxPrice,
+  setMinPrice,
+  setSelectedCategories,
+  setInStock,
+  setCurrentFilters,
+}) => {
   const [isVisible, setIsVisible] = useState(false);
-  const [categories, setCategories] = useState<Category[]>();
-  const [minPrice, setMinPrice] = useState<number | undefined>();
-  const [maxPrice, setMaxPrice] = useState<number | undefined>();
-  const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
-  const [inStock, setInStock] = useState(false);
-  const [currentFilters, setCurrentFilters] =
-    useState<Omit<GetProductsRequestParams, "token">>();
-
-  const getCategoriesRequest = useOceanRequest({
-    request: getCategories,
-  });
-
-  useEffect(() => {
-    getCategoriesRequest(null).then((response) => {
-      setCategories(response);
-      setSelectedCategories(response);
-    });
-  }, []);
 
   const checkIfFiltersChanged = () => {
     const hasFilters =
@@ -70,34 +79,18 @@ export const FiltersPane: React.FC<FiltersPaneProps> = ({ fetchProducts }) => {
     return JSON.stringify(_currentFilters) !== JSON.stringify(currentFilters);
   };
 
-  const resetFilters = () => {
-    setMinPrice(undefined);
-    setMaxPrice(undefined);
-    setSelectedCategories(categories || []);
-    setInStock(false);
-    setCurrentFilters(undefined);
-    fetchProducts();
-  };
-
-  const onApplyClick = () => {
-    const filters: Omit<GetProductsRequestParams, "token"> = {
-      filters: {
-        minPrice,
-        maxPrice,
-        inStock: inStock || undefined,
-        categories: (JSON.stringify(selectedCategories.map((c) => c.name))),
-      },
-    };
-
-    setCurrentFilters(filters);
-
-    fetchProducts(filters);
-  };
-
   const sharedStyles: React.CSSProperties = {
     height: `calc(100vh - ${NAVBAR_HEIGHT}px)`,
     width: isVisible ? `${paneWidth}px` : "0",
     transition: "all 0.3s ease",
+  };
+
+  const onSelectAllCategoriesClick = () => {
+    if (selectedCategories.length === categories?.length) {
+      setSelectedCategories([]);
+    } else {
+      setSelectedCategories(categories || []);
+    }
   };
 
   const getPaneFiltersContent = () => {
@@ -158,6 +151,18 @@ export const FiltersPane: React.FC<FiltersPaneProps> = ({ fetchProducts }) => {
         <Separator />
         <div className="flex layout-column row-gap-8">
           <RawText text="Categories" fontWeight={700} fontSize={22} />
+          <div
+            className="flex align-center column-gap-8 cursor-pointer"
+            onClick={onSelectAllCategoriesClick}
+          >
+            <OceanInput
+              type="checkbox"
+              checked={selectedCategories.length === categories?.length}
+              value={"all"}
+              onChange={onSelectAllCategoriesClick}
+            />
+            <RawText text={"Select all"} />
+          </div>
           <div
             className="flex layout-column row-gap-8 column-gap-8 flex-wrap"
             style={{ maxHeight: "350px" }}
@@ -231,18 +236,22 @@ export const FiltersPane: React.FC<FiltersPaneProps> = ({ fetchProducts }) => {
         >
           <SecondaryButton
             label="Reset"
-            onClick={resetFilters}
+            onClick={() => fetchProducts(true)}
             disabled={!currentFilters}
           />
           <PrimaryButton
             label="Apply"
-            onClick={onApplyClick}
+            onClick={() => fetchProducts()}
             disabled={!checkIfFiltersChanged()}
           />
         </div>
       </div>
     );
   };
+
+  useEffect(() => {
+    setSelectedCategories(categories || []);
+  }, [categories, setSelectedCategories]);
 
   return (
     <div

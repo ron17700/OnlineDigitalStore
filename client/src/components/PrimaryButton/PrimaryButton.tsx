@@ -4,7 +4,9 @@ import { RawText } from "../RawText/RawText";
 import "./primary-button.scss";
 
 type PrimaryButtonProps = {
-  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  onClick?: (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => void | Promise<void>;
   label: string | React.ReactNode;
   disabled?: boolean;
   className?: string;

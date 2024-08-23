@@ -15,16 +15,36 @@ import { Product } from "../../DataModel/Objects/Product";
 import { ROUTES } from "../../Types/Routes";
 import { FiltersPane } from "./components/FiltersPane/FiltersPane";
 import { Navbar } from "../../components/Navbar/Navbar";
+import { getCategories } from "../../Requests/Category/GetCategories";
 
 export const Home: React.FC = () => {
   const { isAuthenticated, isLoading } = useAuth0();
   const navigate = useNavigate();
   const [products, setProducts] = useState<Product[]>();
   const [isLoadingProducts, setIsLoadingProducts] = useState(true);
+  const [freeSearchValue, setFreeSearchValue] = useState<string>("");
+  const [minPrice, setMinPrice] = useState<number | undefined>();
+  const [maxPrice, setMaxPrice] = useState<number | undefined>();
+  const [categories, setCategories] = useState<Category[]>();
+  const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
+  const [inStock, setInStock] = useState(false);
+  const [currentFilters, setCurrentFilters] =
+    useState<Omit<GetProductsRequestParams, "token">>();
 
   const getProductsRequest = useOceanRequest({
     request: getProducts,
   });
+
+  const getCategoriesRequest = useOceanRequest({
+    request: getCategories,
+  });
+
+  useEffect(() => {
+    getCategoriesRequest(null).then((response) => {
+      setCategories(response);
+      setSelectedCategories(response);
+    });
+  }, []);
 
   const fetchProducts = useCallback(
     async (params: Omit<GetProductsRequestParams, "token"> = {}) => {
@@ -43,6 +63,33 @@ export const Home: React.FC = () => {
         });
     },
     [getProductsRequest, setProducts, setIsLoadingProducts]
+  );
+
+  const fetchProductsWithFilters = useCallback(
+    (clearFilters: boolean = false) => {
+      if (clearFilters) {
+        setMinPrice(undefined);
+        setMaxPrice(undefined);
+        setSelectedCategories(categories || []);
+        setInStock(false);
+        setCurrentFilters(undefined);
+        return fetchProducts();
+      } else {
+        const filters: Omit<GetProductsRequestParams, "token"> = {
+          filters: {
+            minPrice,
+            maxPrice,
+            inStock: inStock || undefined,
+            categories: JSON.stringify(selectedCategories.map((c) => c.name)),
+          },
+        };
+
+        setCurrentFilters(filters);
+
+        return fetchProducts(filters);
+      }
+    },
+    [minPrice, maxPrice, inStock, selectedCategories, fetchProducts]
   );
 
   useEffect(() => {
@@ -93,9 +140,25 @@ export const Home: React.FC = () => {
 
   return (
     <div>
-      <Navbar />
+      <Navbar
+        searchValue={freeSearchValue}
+        setSearchValue={setFreeSearchValue}
+      />
       <div className="flex column-gap-24 relative">
-        <FiltersPane fetchProducts={fetchProducts} />
+        <FiltersPane
+          fetchProducts={fetchProductsWithFilters}
+          categories={categories || []}
+          inStock={inStock}
+          maxPrice={maxPrice}
+          minPrice={minPrice}
+          selectedCategories={selectedCategories}
+          currentFilters={currentFilters}
+          setInStock={setInStock}
+          setMaxPrice={setMaxPrice}
+          setMinPrice={setMinPrice}
+          setSelectedCategories={setSelectedCategories}
+          setCurrentFilters={setCurrentFilters}
+        />
         <div className="flex layout-column row-gap-24 overflow-hidden">
           {Object.values(productsByCategories).map(({ category, products }) => {
             return (
