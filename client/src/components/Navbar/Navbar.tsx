@@ -1,4 +1,5 @@
-import { useContext, useState } from "react";
+import React from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { OceanLogo } from "../../components/OceanLogo/OceanLogo";
 import { TooltipContentWrapper } from "../../components/TooltipContentWrapper/TooltipContentWrapper";
 import { colors } from "../../styles/colors";
@@ -17,17 +18,24 @@ import "./navbar.scss";
 interface NavbarProps {
   tabIndex?: number;
   setTabIndex?: React.Dispatch<React.SetStateAction<number>>;
-  searchValue?: string;
-  setSearchValue?: React.Dispatch<React.SetStateAction<string>>;
+  onEnterDown?: (value: string) => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({
-  searchValue,
-  setSearchValue,
-  setTabIndex,
-  tabIndex,
-}) => {
+export const Navbar: React.FC<NavbarProps> = (props) => {
+  const [searchValue, setSearchValue] = useState("");
   const location = useLocation();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const searchInputRef = useRef<string>(searchValue);
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && props.onEnterDown) {
+          props.onEnterDown(searchInputRef.current);
+        }
+      });
+    }
+  }, [inputRef]);
 
   return (
     <div
@@ -46,20 +54,22 @@ export const Navbar: React.FC<NavbarProps> = ({
               width: "500px",
             }}
           >
-            {setSearchValue && (
-              <OceanInput
-                onChange={setSearchValue}
-                placeholder="Search for products..."
-                value={searchValue || ""}
-                leftIcon={
-                  <MagnifyingGlassIcon
-                    height="16px"
-                    width="16px"
-                    color={colors.gray02}
-                  />
-                }
-              />
-            )}
+            <OceanInput
+              ref={inputRef}
+              onChange={(v) => {
+                setSearchValue(v);
+                searchInputRef.current = v;
+              }}
+              placeholder="Search for products..."
+              value={searchValue}
+              leftIcon={
+                <MagnifyingGlassIcon
+                  height="16px"
+                  width="16px"
+                  color={colors.gray02}
+                />
+              }
+            />
           </div>
         ) : location.pathname === "/admin" ? (
           <div
@@ -72,68 +82,68 @@ export const Navbar: React.FC<NavbarProps> = ({
           >
             <button
               className={`button-style ${
-                tabIndex === 1 ? "active animate" : ""
+                props.tabIndex === 1 ? "active animate" : ""
               }`}
               onClick={() => {
-                if (setTabIndex) {
-                  setTabIndex(1);
+                if (props.setTabIndex) {
+                  props.setTabIndex(1);
                 }
               }}
             >
               <RawText
                 text={`Orders`}
-                color={tabIndex === 1 ? colors.blue03 : undefined}
+                color={props.tabIndex === 1 ? colors.blue03 : undefined}
                 fontSize={14}
                 fontWeight={700}
               />
             </button>
             <button
               className={`button-style ${
-                tabIndex === 2 ? "active animate" : ""
+                props.tabIndex === 2 ? "active animate" : ""
               }`}
               onClick={() => {
-                if (setTabIndex) {
-                  setTabIndex(2);
+                if (props.setTabIndex) {
+                  props.setTabIndex(2);
                 }
               }}
             >
               <RawText
                 text={`Products`}
-                color={tabIndex === 2 ? colors.blue03 : undefined}
+                color={props.tabIndex === 2 ? colors.blue03 : undefined}
                 fontSize={14}
                 fontWeight={700}
               />
             </button>
             <button
               className={`button-style ${
-                tabIndex === 3 ? "active animate" : ""
+                props.tabIndex === 3 ? "active animate" : ""
               }`}
               onClick={() => {
-                if (setTabIndex) {
-                  setTabIndex(3);
+                if (props.setTabIndex) {
+                  props.setTabIndex(3);
                 }
               }}
             >
               <RawText
                 text={`Analytics`}
-                color={tabIndex === 3 ? colors.blue03 : undefined}
+                color={props.tabIndex === 3 ? colors.blue03 : undefined}
                 fontSize={14}
                 fontWeight={700}
               />
             </button>
             <button
               className={`button-style ${
-                tabIndex === 4 ? "active animate" : ""
+                props.tabIndex === 4 ? "active animate" : ""
               }`}
               onClick={() => {
-                if (setTabIndex) {
-                  setTabIndex(4);
+                if (props.setTabIndex) {
+                  props.setTabIndex(4);
                 }
               }}
             >
               <RawText
                 text={`Categories`}
-                color={tabIndex === 4 ? colors.blue03 : undefined}
+                color={props.tabIndex === 4 ? colors.blue03 : undefined}
                 fontSize={14}
                 fontWeight={700}
               />

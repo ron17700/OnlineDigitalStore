@@ -22,7 +22,6 @@ export const Home: React.FC = () => {
   const navigate = useNavigate();
   const [products, setProducts] = useState<Product[]>();
   const [isLoadingProducts, setIsLoadingProducts] = useState(true);
-  const [freeSearchValue, setFreeSearchValue] = useState<string>("");
   const [minPrice, setMinPrice] = useState<number | undefined>();
   const [maxPrice, setMaxPrice] = useState<number | undefined>();
   const [categories, setCategories] = useState<Category[]>();
@@ -66,7 +65,7 @@ export const Home: React.FC = () => {
   );
 
   const fetchProductsWithFilters = useCallback(
-    (clearFilters: boolean = false) => {
+    (clearFilters: boolean = false, freeSearch: string = "") => {
       if (clearFilters) {
         setMinPrice(undefined);
         setMaxPrice(undefined);
@@ -77,10 +76,13 @@ export const Home: React.FC = () => {
       } else {
         const filters: Omit<GetProductsRequestParams, "token"> = {
           filters: {
+            search: freeSearch || undefined,
             minPrice,
             maxPrice,
             inStock: inStock || undefined,
-            categories: JSON.stringify(selectedCategories.map((c) => c.name)),
+            categories: selectedCategories.length
+              ? JSON.stringify(selectedCategories.map((c) => c.name))
+              : undefined,
           },
         };
 
@@ -141,8 +143,9 @@ export const Home: React.FC = () => {
   return (
     <div>
       <Navbar
-        searchValue={freeSearchValue}
-        setSearchValue={setFreeSearchValue}
+        onEnterDown={(search) => {
+          fetchProductsWithFilters(false, search);
+        }}
       />
       <div className="flex column-gap-24 relative">
         <FiltersPane
