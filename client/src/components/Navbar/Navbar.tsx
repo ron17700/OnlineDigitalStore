@@ -1,4 +1,5 @@
-import { useContext, useState } from "react";
+import React from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { OceanLogo } from "../../components/OceanLogo/OceanLogo";
 import { TooltipContentWrapper } from "../../components/TooltipContentWrapper/TooltipContentWrapper";
 import { colors } from "../../styles/colors";
@@ -17,11 +18,24 @@ import "./navbar.scss";
 interface NavbarProps {
   tabIndex?: number;
   setTabIndex?: React.Dispatch<React.SetStateAction<number>>;
+  onEnterDown?: (value: string) => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = (props) => {
   const [searchValue, setSearchValue] = useState("");
   const location = useLocation();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const searchInputRef = useRef<string>(searchValue);
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && props.onEnterDown) {
+          props.onEnterDown(searchInputRef.current);
+        }
+      });
+    }
+  }, [inputRef]);
 
   return (
     <div
@@ -41,7 +55,11 @@ export const Navbar: React.FC<NavbarProps> = (props) => {
             }}
           >
             <OceanInput
-              onChange={setSearchValue}
+              ref={inputRef}
+              onChange={(v) => {
+                setSearchValue(v);
+                searchInputRef.current = v;
+              }}
               placeholder="Search for products..."
               value={searchValue}
               leftIcon={
