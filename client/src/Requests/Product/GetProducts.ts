@@ -6,7 +6,7 @@ export type GetProductsRequestParams = {
   filters?: {
     minPrice?: number;
     maxPrice?: number;
-    categoryId?: string;
+    categories?: string;
     inStock?: boolean;
     sortBy?: string;
     search?: string;

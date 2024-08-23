@@ -63,7 +63,7 @@ export const FiltersPane: React.FC<FiltersPaneProps> = ({ fetchProducts }) => {
         minPrice,
         maxPrice,
         inStock: inStock || undefined,
-        categoryId: selectedCategories[0]?._id,
+        categories: selectedCategories[0]?._id,
       },
     };
 
@@ -85,7 +85,7 @@ export const FiltersPane: React.FC<FiltersPaneProps> = ({ fetchProducts }) => {
         minPrice,
         maxPrice,
         inStock: inStock || undefined,
-        categoryId: selectedCategories[0]?._id,
+        categories: (JSON.stringify(selectedCategories.map((c) => c.name))),
       },
     };
 
