@@ -12,12 +12,20 @@ import { Order, ORDER_STATUSES } from "../../../../DataModel/Objects/Order";
 import { deleteOrder } from "../../../../Requests/Order/DeleteOrder";
 import { updateOrder } from "../../../../Requests/Order/UpdateOrder";
 import { deepClone } from "../../../../Utils/ObjectUtils";
+import { getAddresses } from "../../../../Requests/Address/GetAddresses";
+import { Address } from "../../../../DataModel/Objects/Address";
 
 export const YourOrdersSidePane: React.FC = () => {
   const [cart, setCart] = useState<Cart | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
+  const [addresses, setAddresses] = useState<Address[]>([]);
   const [isLoadingCart, setIsLoadingCart] = useState(true);
   const [isLoadingOrders, setIsLoadingOrders] = useState(true);
+  const [isLoadingAddresses, setIsLoadingAddresses] = useState(true);
+
+  const getAddressesRequest = useOceanRequest({
+    request: getAddresses,
+  });
 
   const updateCartRequest = useOceanRequest({
     request: updateCart,
@@ -42,6 +50,7 @@ export const YourOrdersSidePane: React.FC = () => {
   useEffect(() => {
     setIsLoadingCart(true);
     setIsLoadingOrders(true);
+    setIsLoadingAddresses(true);
 
     getOrdersRequest(null)
       .then((res) => {
@@ -65,6 +74,18 @@ export const YourOrdersSidePane: React.FC = () => {
       })
       .finally(() => {
         setIsLoadingCart(false);
+      });
+
+    getAddressesRequest(null)
+      .then((res) => {
+        setAddresses(res);
+      })
+      .catch((err) => {
+        setAddresses([]);
+        toast.error("Failed to get addresses");
+      })
+      .finally(() => {
+        setIsLoadingAddresses(false);
       });
   }, []);
 
@@ -115,7 +136,7 @@ export const YourOrdersSidePane: React.FC = () => {
     setOrders(newOrders);
 
     cancelOrderRequest({
-      orderId:newOrder._id,
+      orderId: newOrder._id,
       order: newOrder,
     })
       .then((response) => {})
@@ -164,8 +185,10 @@ export const YourOrdersSidePane: React.FC = () => {
           component: (
             <ShoppingCart
               cart={cart}
-              isLoading={isLoadingCart}
+              isLoadingCart={isLoadingCart}
               removeItemFromCart={removeItemFromCart}
+              addresses={addresses}
+              isLoadingAddresses={isLoadingAddresses}
             />
           ),
         },

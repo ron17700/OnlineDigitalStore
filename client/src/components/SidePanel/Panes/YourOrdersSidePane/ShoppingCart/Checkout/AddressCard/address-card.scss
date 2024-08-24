@@ -1,0 +1,30 @@
+@import "../../../../../../../styles/colors.scss";
+
+.address-card-container {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 16px 24px;
+    border-radius: 16px;
+    transition: all 0.1s ease-in-out;
+    border: 1px solid $gray-04;
+    display: flex;
+    flex-direction: column;
+    row-gap: 16px;
+
+    &.selected {
+        border: 1px solid $blue-05;
+    }
+
+    &:not(&.loading) {
+        &:not(.selected) {
+            cursor: pointer;
+        }
+    }
+
+    &:hover {
+        &:not(&.selected) {
+            border: 1px solid $blue-06;
+            background-color: $gray-06;
+        }
+    }
+}
