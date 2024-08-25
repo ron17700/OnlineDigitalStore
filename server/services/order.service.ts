@@ -2,6 +2,7 @@ import { ICartItem } from '../models/cart.model';
 import ProductModel, { IProduct } from "../models/product.model";
 import OrderModel, { IOrder, OrderStatus } from "../models/order.model";
 import AddressService from './address.service';
+import CartService from "./cart.service";
 import mongoose from "mongoose";
 
 const OrderService = {
@@ -27,7 +28,10 @@ const OrderService = {
         const addressId = order.address?.toString() || '';
         const existingAddress = await AddressService.getAddressById(addressId, userId, isAdmin);
 
-        if (!Array.isArray(order.products)) {
+        const totalQuantity = order.products
+            .map(product => product.quantity)
+            .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+        if (!Array.isArray(order.products) || totalQuantity < 1) {
             throw new Error('Invalid products!');
         }
 
@@ -39,10 +43,11 @@ const OrderService = {
         return this.withTransaction(async (session) => {
             await this.checkAndDeductStock(newOrder.products, session);
             newOrder.price = await this.calculateTotalPrice(newOrder.products, session);
+            await CartService.deleteCart(userId, { session });
             return await newOrder.save({ session });
         });
     },
-    async updateOrder(orderId: string, userId: string, isAdmin: boolean, order: IOrder) {
+    async updateOrder(orderId: string, userId: string, isAdmin: boolean, order: any) {
         return this.withTransaction(async (session) => {
             const existingOrder: any = await OrderModel.findById(orderId).session(session).exec();
             if (!existingOrder) {
@@ -53,9 +58,8 @@ const OrderService = {
                 throw new Error('Unauthorized!');
             }
 
-            const addressId = order.address?.toString() || '';
+            const addressId = order.address?._id?.toString() || '';
             const existingAddress = await AddressService.getAddressById(addressId, userId, isAdmin);
-
             const isCancelRequest = order.status === OrderStatus.Cancelled && existingOrder.status === OrderStatus.Created;
             if (!isAdmin && !isCancelRequest) {
                 throw new Error('Cannot update order after it has been processed!');
@@ -66,11 +70,16 @@ const OrderService = {
                 throw new Error('Invalid status!');
             }
 
-            if (!Array.isArray(order.products)) {
+            const totalQuantity = (order.products as ICartItem[])
+                .map(product => product.quantity)
+                .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+            if (!Array.isArray(order.products) || totalQuantity < 1) {
                 throw new Error('Invalid products!');
             }
             await this.restoreStock(existingOrder.products, session);
-            await this.checkAndDeductStock(order.products, session);
+            if (!isCancelRequest) {
+                await this.checkAndDeductStock(order.products, session);
+            }
 
             if (isAdmin) {
                 existingOrder.address = existingAddress._id;
@@ -89,7 +98,6 @@ const OrderService = {
                 throw new Error('Order not found!');
             }
 
-            await this.restoreStock(order.products, session);
             order.isActive = false;
             await order.save({session});
         });

@@ -20,8 +20,8 @@ const CartService = {
         }
         return await CartModel.create({ user: userId });
     },
-    async deleteCart(userId: string) {
-        const cart = await CartModel.findOneAndDelete({ user: userId });
+    async deleteCart(userId: string, options = {}) {
+        const cart = await CartModel.findOneAndDelete({ user: userId }, options);
         if (!cart) {
             throw new Error('Cart not found!');
         }
