@@ -11,6 +11,6 @@ COPY package*.json ./
 COPY --from=builder /usr/src/app .
 COPY . .
 
-EXPOSE 3001
+EXPOSE 3000
 
 ENTRYPOINT [ "npm", "run", "start" ]
