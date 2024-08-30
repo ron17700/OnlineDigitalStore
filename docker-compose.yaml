@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+  server:
+    container_name: nodejs-server
+    build: ./server
+    ports:
+      - 3001:3001
+    networks:
+      - server-network
+
+  client:
+    container_name: react-client
+    build: ./client
+    ports:
+      - 3000:3000
+    networks:
+      - server-network
+
+networks:
+  server-network:
+    driver: bridge
