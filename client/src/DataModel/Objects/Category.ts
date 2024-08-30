@@ -1,13 +1,13 @@
 export const MOCK_CATEGORY_NAMES = {
-  ELECTRONICS: "electronics",
-  CLOTHING: "clothing",
-  HOME: "home",
-  SPORTS: "sports",
-  FOOD: "food",
-  BOOKS: "books",
-  TOYS: "toys",
-  GAMES: "games",
-  TOOLS: "tools",
+  ELECTRONICS: "Electronics",
+  CLOTHING: "Clothing",
+  HOME: "Home",
+  SPORTS: "Sports",
+  FOOD: "Food",
+  BOOKS: "Books",
+  TOYS: "Toys",
+  GAMES: "Games",
+  TOOLS: "Tools",
 } as const;
 
 export type Category = {
