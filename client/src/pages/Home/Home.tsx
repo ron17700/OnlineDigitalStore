@@ -150,7 +150,7 @@ export const Home: React.FC = () => {
       <div className="flex column-gap-24 relative">
         <FiltersPane
           fetchProducts={fetchProductsWithFilters}
-          categories={categories || []}
+          categories={categories}
           inStock={inStock}
           maxPrice={maxPrice}
           minPrice={minPrice}
@@ -166,6 +166,7 @@ export const Home: React.FC = () => {
           {Object.values(productsByCategories).map(({ category, products }) => {
             return (
               <ProductsCategorySlide
+                key={category._id}
                 categoryName={category.name}
                 products={products}
                 isLoading={isLoadingProducts}
@@ -176,6 +177,7 @@ export const Home: React.FC = () => {
             Object.values(MOCK_CATEGORY_NAMES).map((categoryName) => {
               return (
                 <ProductsCategorySlide
+                  key={categoryName}
                   categoryName={categoryName}
                   products={[]}
                   isLoading={true}

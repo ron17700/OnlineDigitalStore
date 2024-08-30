@@ -1,6 +1,4 @@
 import { useEffect, useState } from "react";
-import { useOceanRequest } from "../../../../Hooks/UseOceanRequest";
-import { getCategories } from "../../../../Requests/Category/GetCategories";
 import { Category } from "../../../../DataModel/Objects/Category";
 import { OceanInput } from "../../../../components/OceanInput/OceanInput";
 import {
@@ -19,7 +17,7 @@ import { NAVBAR_HEIGHT } from "../../../../components/Navbar/constants";
 import { NavbarButton } from "../../../../components/Navbar/NavbarButton/NavbarButton";
 
 type FiltersPaneProps = {
-  categories: Category[];
+  categories: Category[] | undefined;
 
   minPrice: number | undefined;
   maxPrice: number | undefined;
