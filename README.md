@@ -46,4 +46,5 @@ You can change server configuration in the `.env` file.
    Once its finished, you can access the application at the following URL:
 
     Client: http://localhost:3000
+
     Server: http://localhost:3001
