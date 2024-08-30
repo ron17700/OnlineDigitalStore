@@ -41,3 +41,9 @@ You can change server configuration in the `.env` file.
 
    ```bash
    docker-compose up -d
+
+3. **Accessing the Application**
+   Once its finished, you can access the application at the following URL:
+
+    Client: http://localhost:3000
+    Server: http://localhost:3001
