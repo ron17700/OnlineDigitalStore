@@ -16,6 +16,7 @@ import { getAddresses } from "../../../../Requests/Address/GetAddresses";
 import { Address } from "../../../../DataModel/Objects/Address";
 
 export const YourOrdersSidePane: React.FC = () => {
+  const [activeTabIndex, setActiveTabIndex] = useState(0);
   const [cart, setCart] = useState<Cart | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
   const [addresses, setAddresses] = useState<Address[]>([]);
@@ -179,6 +180,8 @@ export const YourOrdersSidePane: React.FC = () => {
 
   return (
     <Tabs
+      activeTabIndex={activeTabIndex}
+      setActiveTabIndex={setActiveTabIndex}
       tabs={[
         {
           header: "Shopping cart",

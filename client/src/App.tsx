@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Home } from "./pages/Home/Home";
 import { Login } from "./pages/Login/Login";
@@ -7,42 +7,52 @@ import { SidePanelContext } from "./Contexts/SidePanelContext";
 import { ROUTES } from "./Types/Routes";
 import { SidePanelTypes } from "./Types/SidePanels";
 import { SidePanel } from "./components/SidePanel/SidePanel";
+import { AdminPanel } from "./pages/AdminPanel/AdminPanel";
+import { Libraries, LoadScript } from "@react-google-maps/api";
 import "./App.scss";
 import "./styles/default-style.scss";
 import "react-toastify/dist/ReactToastify.css";
-import { AdminPanel } from "./pages/AdminPanel/AdminPanel";
+
+const libraries: Libraries = ["places"];
+
+const router = createBrowserRouter([
+  {
+    path: `/${ROUTES.HOME}`,
+    element: <Home />,
+  },
+  {
+    path: `/${ROUTES.ADMIN}`,
+    element: <AdminPanel />,
+  },
+  {
+    path: `/${ROUTES.LOGIN}`,
+    element: <Login />,
+  },
+]);
 
 export const App: React.FC = () => {
   const [activeSidePanel, setActiveSidePanel] = useState<SidePanelTypes | null>(
     null
   );
-  const router = createBrowserRouter([
-    {
-      path: `/${ROUTES.HOME}`,
-      element: <Home />,
-    },
-    {
-      path: `/${ROUTES.ADMIN}`,
-      element: <AdminPanel />,
-    },
-    {
-      path: `/${ROUTES.LOGIN}`,
-      element: <Login />,
-    },
-  ]);
+
+  const sidePaneContextValue = useMemo(() => {
+    return {
+      setActiveSidePanel,
+    };
+  }, []);
 
   return (
-    <SidePanelContext.Provider
-      value={{
-        activeSidePanel,
-        setActiveSidePanel,
-      }}
+    <LoadScript
+      googleMapsApiKey={"AIzaSyB4CW2Nb9m9IVvfM-11LekgWIYKvlyHSwk"}
+      libraries={libraries}
     >
-      <div className="App">
-        <RouterProvider router={router} />
-        <ToastContainer />
-        <SidePanel />
-      </div>
-    </SidePanelContext.Provider>
+      <SidePanelContext.Provider value={sidePaneContextValue}>
+        <div className="App">
+          <RouterProvider router={router} />
+          <ToastContainer />
+          <SidePanel activeSidePanel={activeSidePanel} />
+        </div>
+      </SidePanelContext.Provider>
+    </LoadScript>
   );
 };

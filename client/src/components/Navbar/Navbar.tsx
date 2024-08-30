@@ -5,7 +5,11 @@ import { TooltipContentWrapper } from "../../components/TooltipContentWrapper/To
 import { colors } from "../../styles/colors";
 import { UserProfileMenu } from "./UserProfileMenu/UserProfileMenu";
 import { NavbarButton } from "./NavbarButton/NavbarButton";
-import { ShoppingCartIcon, UserIcon } from "@heroicons/react/24/outline";
+import {
+  ShoppingCartIcon,
+  UserIcon,
+  MapPinIcon,
+} from "@heroicons/react/24/outline";
 import { MagnifyingGlassIcon } from "@heroicons/react/16/solid";
 import { OceanInput } from "../../components/OceanInput/OceanInput";
 import { SidePanelContext } from "../../Contexts/SidePanelContext";
@@ -163,7 +167,13 @@ const RightNavbarContent: React.FC = () => {
   return (
     <div className="flex align-center column-gap-16">
       <TooltipContentWrapper
-        content={<UserProfileMenu />}
+        content={
+          <UserProfileMenu
+            closeMenu={() => {
+              setUserProfileVisible(false);
+            }}
+          />
+        }
         delay={0}
         tooltipProps={{
           visible: userProfileVisible,
@@ -180,6 +190,12 @@ const RightNavbarContent: React.FC = () => {
           }}
         />
       </TooltipContentWrapper>
+      <NavbarButton
+        icon={<MapPinIcon height="20px" width="20px" color={colors.gray01} />}
+        onClick={() => {
+          setActiveSidePanel(SIDE_PANELS.ADDRESSES);
+        }}
+      />
       <NavbarButton
         icon={
           <ShoppingCartIcon height="20px" width="20px" color={colors.gray01} />

@@ -9,6 +9,8 @@ import { createOrder } from "../../../../../Requests/Order/CreateOrder";
 import { ORDER_STATUSES } from "../../../../../DataModel/Objects/Order";
 import { SidePanelContext } from "../../../../../Contexts/SidePanelContext";
 import { toast } from "react-toastify";
+import { SecondaryButton } from "../../../../SecondaryButton/SecondaryButton";
+import { SIDE_PANELS } from "../../../../../Types/SidePanels";
 
 type ShoppingCartProps = {
   isLoadingCart: boolean;
@@ -61,41 +63,52 @@ export const ShoppingCart: React.FC<ShoppingCartProps> = ({
             selectedAddress={selectedAddress}
             setSelectedAddress={setSelectedAddress}
           />
-          {!isLoadingCart && !!addresses.length && (
-            <PrimaryButton
-              disabled={!selectedAddress}
-              label={`Order now`}
-              onClick={() => {
-                if (!selectedAddress) {
-                  return;
-                }
-
-                setActiveSidePanel(null);
-
-                createOrderRequest({
-                  order: {
-                    address: selectedAddress._id,
-                    isActive: true,
-                    status: ORDER_STATUSES.Created,
-                    products: cart?.products || [],
-                    price:
-                      cart?.products.reduce(
-                        (prev, product) => prev + product.product.price,
-                        0
-                      ) || 0,
-                  },
-                })
-                  .then(() => {
-                    toast.success("Order has been created successfully");
-                  })
-                  .catch(() => {
-                    toast.error("Order creation has been failed");
-                  });
+          <div className="flex align-center column-gap-16">
+            <SecondaryButton
+              label="Manage your addresses"
+              style={{
+                alignSelf: "center",
               }}
-              style={{ width: "fit-content" }}
-              className="align-self-center"
+              onClick={() => {
+                setActiveSidePanel(SIDE_PANELS.ADDRESSES);
+              }}
             />
-          )}
+            {!isLoadingCart && !!addresses.length && (
+              <PrimaryButton
+                disabled={!selectedAddress}
+                label={`Order now`}
+                onClick={() => {
+                  if (!selectedAddress) {
+                    return;
+                  }
+
+                  setActiveSidePanel(null);
+
+                  createOrderRequest({
+                    order: {
+                      address: selectedAddress._id,
+                      isActive: true,
+                      status: ORDER_STATUSES.Created,
+                      products: cart?.products || [],
+                      price:
+                        cart?.products.reduce(
+                          (prev, product) => prev + product.product.price,
+                          0
+                        ) || 0,
+                    },
+                  })
+                    .then(() => {
+                      toast.success("Order has been created successfully");
+                    })
+                    .catch(() => {
+                      toast.error("Order creation has been failed");
+                    });
+                }}
+                style={{ width: "fit-content" }}
+                className="align-self-center"
+              />
+            )}
+          </div>
         </div>
       );
     }
@@ -126,12 +139,5 @@ export const ShoppingCart: React.FC<ShoppingCartProps> = ({
     );
   };
 
-  return (
-    <div
-      className="flex layout-column row-gap-16"
-      style={{ marginTop: "24px" }}
-    >
-      {getContent()}
-    </div>
-  );
+  return <div className="flex layout-column row-gap-16">{getContent()}</div>;
 };

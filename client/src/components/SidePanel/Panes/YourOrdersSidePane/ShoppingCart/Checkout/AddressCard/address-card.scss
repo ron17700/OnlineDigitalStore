@@ -8,23 +8,41 @@
     transition: all 0.1s ease-in-out;
     border: 1px solid $gray-04;
     display: flex;
-    flex-direction: column;
-    row-gap: 16px;
+    column-gap: 16px;
+    justify-content: space-between;
 
     &.selected {
-        border: 1px solid $blue-05;
+        &.clickable {
+            border: 1px solid $blue-05;
+        }
     }
 
     &:not(&.loading) {
         &:not(.selected) {
-            cursor: pointer;
+            &.clickable {
+                cursor: pointer;
+            }
         }
     }
 
     &:hover {
         &:not(&.selected) {
-            border: 1px solid $blue-06;
-            background-color: $gray-06;
+            &.clickable {
+                border: 1px solid $blue-06;
+                background-color: $gray-06;
+            }
         }
     }
+}
+
+.remove-button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    height: 24px;
+    width: 24px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background-color: $gray-05;
 }

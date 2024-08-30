@@ -4,10 +4,16 @@ import { RawText } from "../../../components/RawText/RawText";
 import { colors } from "../../../styles/colors";
 import { Separator } from "../../../components/Separator/Separator";
 import { ROUTES } from "../../../Types/Routes";
-import "./user-profile-menu.scss";
 import { useNavigate } from "react-router-dom";
+import "./user-profile-menu.scss";
 
-export const UserProfileMenu: React.FC = () => {
+type UserProfileMenuProps = {
+  closeMenu: () => void;
+};
+
+export const UserProfileMenu: React.FC<UserProfileMenuProps> = ({
+  closeMenu,
+}) => {
   const { user, logout } = useAuth0();
   const navigate = useNavigate(); // Use the useNavigate hook
 
@@ -38,6 +44,7 @@ export const UserProfileMenu: React.FC = () => {
         <div
           className="logout-container-content"
           onClick={() => {
+            closeMenu();
             navigate(`/${ROUTES.ADMIN}`); // Navigate to /Admin when clicked
           }}
         >
@@ -49,6 +56,8 @@ export const UserProfileMenu: React.FC = () => {
         <div
           className="logout-container-content"
           onClick={() => {
+            closeMenu();
+
             logout({
               logoutParams: {
                 returnTo: `${window.location.origin}/${ROUTES.LOGIN}`,

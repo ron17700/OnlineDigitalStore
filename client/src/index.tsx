@@ -14,13 +14,11 @@ const authorizationParams = {
 };
 
 root.render(
-  <React.StrictMode>
-    <Auth0Provider
-      domain="dev-dkqfydoceubyxu30.us.auth0.com"
-      clientId="nugjipUQ5ojLab9HQXzDzfQBkDEF0ZF1"
-      authorizationParams={authorizationParams}
-    >
-      <App />
-    </Auth0Provider>
-  </React.StrictMode>
+  <Auth0Provider
+    domain="dev-dkqfydoceubyxu30.us.auth0.com"
+    clientId="nugjipUQ5ojLab9HQXzDzfQBkDEF0ZF1"
+    authorizationParams={authorizationParams}
+  >
+    <App />
+  </Auth0Provider>
 );
