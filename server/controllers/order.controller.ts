@@ -39,8 +39,7 @@ const OrderController: OrderController = {
     async updateOrder(req, res, next) {
         try {
             const {orderId} = req.params;
-            const order = await OrderService
-                .updateOrder(orderId, req.userId, req.isAdmin, req.body);
+            const order = await OrderService.updateOrder(orderId, req.userId, req.isAdmin, req.body);
             res.status(200).json(order);
         } catch (error) {
             next(error);
@@ -49,7 +48,7 @@ const OrderController: OrderController = {
     async deleteOrder(req, res, next) {
         try {
             const {orderId} = req.params;
-            await OrderService.deleteOrder(orderId);
+            await OrderService.deleteOrder(orderId, req.userId, req.isAdmin);
             res.status(200).json({message: 'Order deleted successfully'});
         } catch (error) {
             next(error);
