@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import { MongoError } from 'mongodb';
 
 interface ValidationError {
     message: string;
@@ -14,23 +15,26 @@ interface CustomError extends Error {
 }
 
 const errorHandler = (error: CustomError, req: Request, res: Response, next: NextFunction): Response => {
-    let errorMessages: string[] = [];
-
-    if (error.errors) {
-        // Mongoose validation errors
-        for (let [key, validationError] of Object.entries(error.errors)) {
-            const errorMessage = validationError.properties ? validationError.properties.message : validationError.message;
-            errorMessages.push(errorMessage);
-            console.error(errorMessage);
-            console.log(validationError.stack);
+    // MongoDB errors
+    if (error instanceof MongoError) {
+        switch (error.code) {
+            case 11000: // Duplicate key error
+                res.status(400).json({message: 'Duplicate key error: A record with this key already exists.'});
+                break;
+            case 121: // Document failed validation
+                res.status(400).json({message: 'Document failed validation.'});
+                break;
+            default:
+                res.status(500).json({message: 'An internal server error occurred.'});
+                break;
         }
-        return res.status(400).json({ errors: errorMessages });
     } else {
         // General errors
         console.error(error.message);
         console.log(error.stack);
-        return res.status(error.status || 400).json({ error: { message: error.message } });
+        return res.status(error.status || 500).json({ error: { message: "Internal Server Error:" + error.message } });
     }
+    return res.status(500).json({ message: 'An internal server error occurred.' });
 };
 
 export default errorHandler;
