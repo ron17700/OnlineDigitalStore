@@ -91,13 +91,20 @@ const OrderService = {
             return await existingOrder.save({ session });
         });
     },
-    async deleteOrder(orderId: string) {
+    async deleteOrder(orderId: string, userId: string, isAdmin: boolean) {
         return this.withTransaction(async (session) => {
             const order: IOrder | null = await OrderModel.findById(orderId).session(session).exec();
             if (!order) {
                 throw new Error('Order not found!');
             }
-
+            if (order.user !== userId && !isAdmin) {
+                throw new Error('Unauthorized!');
+            }
+            
+            if (order.status !== OrderStatus.Cancelled) {
+                throw new Error('Order must be canceled before deletion!');
+            }
+    
             order.isActive = false;
             await order.save({session});
         });
