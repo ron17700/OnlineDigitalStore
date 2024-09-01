@@ -97,13 +97,12 @@ const OrderService = {
             if (!order) {
                 throw new Error('Order not found!');
             }
-    
-            if (order.status !== OrderStatus.Cancelled) {
-                throw new Error('Order must be canceled before deletion!');
-            }
-    
             if (order.user !== userId && !isAdmin) {
                 throw new Error('Unauthorized!');
+            }
+            
+            if (order.status !== OrderStatus.Cancelled) {
+                throw new Error('Order must be canceled before deletion!');
             }
     
             order.isActive = false;
