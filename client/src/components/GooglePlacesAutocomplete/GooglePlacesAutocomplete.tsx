@@ -49,7 +49,6 @@ export const GooglePlacesAutocompleteWithMap: React.FC<
         const details: AddressRequestType = {
           city: "--",
           country: "--",
-          isActive: true,
           postalCode: "--",
           state: "--",
           street: "--",

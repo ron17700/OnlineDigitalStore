@@ -4,7 +4,7 @@ import { BaseRequestParams } from "../Types/BaseRequestParams";
 
 export type AddressRequestType = Omit<
   Address,
-  "_id" | "createdAt" | "updatedAt" | "__v" | "user"
+  "_id" | "createdAt" | "updatedAt" | "__v" | "user" | "isActive"
 >;
 
 type CreateAddressRequestParams = {
