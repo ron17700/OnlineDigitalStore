@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
 import { Order } from "../../../DataModel/Objects/Order"; // You will need to define this type
 import { getOrders } from "../../../Requests/Order/GetOrders"; // You will need to create this request
-import { useAuth0 } from "@auth0/auth0-react";
 import { useOceanRequest } from "../../../Hooks/UseOceanRequest";
 import OrdersTable from "./OrdersTable"; // You will need to create this component
 
 export const OrdersTab: React.FC = () => {
-  const { isAuthenticated, isLoading } = useAuth0();
   const [orders, setOrders] = useState<Order[]>();
   const [isLoadingOrders, setIsLoadingOrders] = useState(true);
 
@@ -30,14 +28,10 @@ export const OrdersTab: React.FC = () => {
   };
 
   useEffect(() => {
-    if (!isAuthenticated || isLoading) {
-      return;
-    }
-
     fetchOrders();
-  }, [isLoading, isAuthenticated]);
+  }, []);
 
-  if (isLoading || isLoadingOrders) {
+  if (isLoadingOrders) {
     return <div>Loading...</div>;
   }
 

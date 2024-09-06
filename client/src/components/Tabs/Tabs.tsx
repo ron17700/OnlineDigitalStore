@@ -1,4 +1,4 @@
-import { ReactNode, useState } from "react";
+import { ReactNode } from "react";
 import { RawText } from "../RawText/RawText";
 import "./tabs.scss";
 
@@ -9,11 +9,15 @@ type TabConfig = {
 
 type TabsProps = {
   tabs: TabConfig[];
+  activeTabIndex: number;
+  setActiveTabIndex: (index: number) => void;
 };
 
-export const Tabs: React.FC<TabsProps> = ({ tabs }) => {
-  const [activeTabIndex, setActiveTabIndex] = useState(0);
-
+export const Tabs: React.FC<TabsProps> = ({
+  tabs,
+  activeTabIndex,
+  setActiveTabIndex,
+}) => {
   return (
     <div className="tabs-navigation-container">
       <div className="tabs-header">
@@ -57,7 +61,9 @@ export const Tabs: React.FC<TabsProps> = ({ tabs }) => {
                 transform: `translateX(calc(-100% * ${activeTabIndex}))`,
               }}
             >
-              {activeTabIndex === index && tab.component}
+              <div style={{ marginTop: "24px" }}>
+                {activeTabIndex === index && tab.component}
+              </div>
             </div>
           );
         })}

@@ -1,4 +1,4 @@
-import { ReactNode, useContext } from "react";
+import { ReactNode, useContext, useMemo } from "react";
 import { SIDE_PANELS, SidePanelTypes } from "../../Types/SidePanels";
 import { SidePanelContext } from "../../Contexts/SidePanelContext";
 import { getClassName } from "../../Utils/getClassName";
@@ -6,19 +6,22 @@ import { RawText } from "../RawText/RawText";
 import { NavbarButton } from "../../components/Navbar/NavbarButton/NavbarButton";
 import { XMarkIcon } from "@heroicons/react/24/solid";
 import { colors } from "../../styles/colors";
-import "./side-panel.scss";
 import { YourOrdersSidePane } from "./Panes/YourOrdersSidePane/YourOrdersSidePane";
+import { AddressesSidePane } from "./Panes/AddressesSidePane/AddressesSidePane";
+import "./side-panel.scss";
 
 const PANES_MAP: {
   [key in SidePanelTypes]: ReactNode;
 } = {
   [SIDE_PANELS.ORDERS_AND_SHOPPING_BAG]: <YourOrdersSidePane />,
+  [SIDE_PANELS.ADDRESSES]: <AddressesSidePane />,
 };
 
 const PANES_HEADER_MAP: {
   [key in SidePanelTypes]: string;
 } = {
   [SIDE_PANELS.ORDERS_AND_SHOPPING_BAG]: "Your orders",
+  [SIDE_PANELS.ADDRESSES]: "Addresses",
 };
 
 const getSidePaneContentByType = (type: SidePanelTypes | null) => {
@@ -37,10 +40,19 @@ const getSidePaneTitle = (type: SidePanelTypes | null) => {
   return PANES_HEADER_MAP[type] || null;
 };
 
-export const SidePanel: React.FC = () => {
-  const { activeSidePanel, setActiveSidePanel } = useContext(SidePanelContext);
-  const content = getSidePaneContentByType(activeSidePanel);
-  const title = getSidePaneTitle(activeSidePanel);
+type SidePanelProps = {
+  activeSidePanel: SidePanelTypes | null;
+};
+
+export const SidePanel: React.FC<SidePanelProps> = ({ activeSidePanel }) => {
+  const { setActiveSidePanel } = useContext(SidePanelContext);
+  const content = useMemo(() => {
+    return getSidePaneContentByType(activeSidePanel);
+  }, [activeSidePanel]);
+
+  const title = useMemo(() => {
+    return getSidePaneTitle(activeSidePanel);
+  }, [activeSidePanel]);
 
   return (
     <div

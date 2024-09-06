@@ -1,6 +1,4 @@
 import { useEffect, useState } from "react";
-import { useOceanRequest } from "../../../../Hooks/UseOceanRequest";
-import { getCategories } from "../../../../Requests/Category/GetCategories";
 import { Category } from "../../../../DataModel/Objects/Category";
 import { OceanInput } from "../../../../components/OceanInput/OceanInput";
 import {
@@ -19,7 +17,7 @@ import { NAVBAR_HEIGHT } from "../../../../components/Navbar/constants";
 import { NavbarButton } from "../../../../components/Navbar/NavbarButton/NavbarButton";
 
 type FiltersPaneProps = {
-  categories: Category[];
+  categories: Category[] | undefined;
 
   minPrice: number | undefined;
   maxPrice: number | undefined;
@@ -31,9 +29,6 @@ type FiltersPaneProps = {
   setMaxPrice: React.Dispatch<React.SetStateAction<number | undefined>>;
   setSelectedCategories: React.Dispatch<React.SetStateAction<Category[]>>;
   setInStock: React.Dispatch<React.SetStateAction<boolean>>;
-  setCurrentFilters: React.Dispatch<
-    React.SetStateAction<Omit<GetProductsRequestParams, "token"> | undefined>
-  >;
 
   fetchProducts: (clearFilters?: boolean) => Promise<void>;
 };
@@ -52,10 +47,16 @@ export const FiltersPane: React.FC<FiltersPaneProps> = ({
   setMinPrice,
   setSelectedCategories,
   setInStock,
-  setCurrentFilters,
 }) => {
   const [isVisible, setIsVisible] = useState(false);
 
+  const checkIfFilterRangesValid = () => {
+    if (minPrice && maxPrice) {
+      return minPrice <= maxPrice;
+    }
+
+    return true;
+  };
   const checkIfFiltersChanged = () => {
     const hasFilters =
       minPrice ||
@@ -123,9 +124,16 @@ export const FiltersPane: React.FC<FiltersPaneProps> = ({
                   color={colors.gray02}
                 />
               }
-              onChange={(value) =>
-                setMinPrice(value ? parseInt(value) : undefined)
-              }
+              onChange={(value) => {
+                if (value) {
+                  const parsedValue = parseInt(value);
+                  if (parsedValue >= 0) {
+                    setMinPrice(parsedValue);
+                  }
+                } else {
+                  setMinPrice(undefined);
+                }
+              }}
             />
           </div>
           <div className="flex align-center space-between">
@@ -142,9 +150,14 @@ export const FiltersPane: React.FC<FiltersPaneProps> = ({
               type="number"
               placeholder="Max price"
               value={maxPrice?.toString() || ""}
-              onChange={(value) =>
-                setMaxPrice(value ? parseInt(value) : undefined)
-              }
+              onChange={(value) => {
+                if (value) {
+                  const parsedValue = parseInt(value);
+                  setMaxPrice(parsedValue);
+                } else {
+                  setMaxPrice(undefined);
+                }
+              }}
             />
           </div>
         </div>
@@ -242,7 +255,7 @@ export const FiltersPane: React.FC<FiltersPaneProps> = ({
           <PrimaryButton
             label="Apply"
             onClick={() => fetchProducts()}
-            disabled={!checkIfFiltersChanged()}
+            disabled={!checkIfFiltersChanged() || !checkIfFilterRangesValid()}
           />
         </div>
       </div>

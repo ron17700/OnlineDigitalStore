@@ -4,10 +4,18 @@ import { RawText } from "../../../components/RawText/RawText";
 import { colors } from "../../../styles/colors";
 import { Separator } from "../../../components/Separator/Separator";
 import { ROUTES } from "../../../Types/Routes";
-import "./user-profile-menu.scss";
 import { useNavigate } from "react-router-dom";
+import { useHasAdminPermission } from "../../../Hooks/UsePermissions";
+import "./user-profile-menu.scss";
 
-export const UserProfileMenu: React.FC = () => {
+type UserProfileMenuProps = {
+  closeMenu: () => void;
+};
+
+export const UserProfileMenu: React.FC<UserProfileMenuProps> = ({
+  closeMenu,
+}) => {
+  const isAdmin = useHasAdminPermission();
   const { user, logout } = useAuth0();
   const navigate = useNavigate(); // Use the useNavigate hook
 
@@ -34,21 +42,26 @@ export const UserProfileMenu: React.FC = () => {
         </div>
       </div>
       <Separator />
-      <div className="logout-container">
-        <div
-          className="logout-container-content"
-          onClick={() => {
-            navigate(`/${ROUTES.ADMIN}`); // Navigate to /Admin when clicked
-          }}
-        >
-          <RawText text="Admin Panel" />
+      {isAdmin && (
+        <div className="logout-container">
+          <div
+            className="logout-container-content"
+            onClick={() => {
+              closeMenu();
+              navigate(`/${ROUTES.ADMIN}`);
+            }}
+          >
+            <RawText text="Admin Panel" />
+          </div>
         </div>
-      </div>
+      )}
       <Separator />
       <div className="logout-container">
         <div
           className="logout-container-content"
           onClick={() => {
+            closeMenu();
+
             logout({
               logoutParams: {
                 returnTo: `${window.location.origin}/${ROUTES.LOGIN}`,

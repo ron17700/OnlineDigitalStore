@@ -115,18 +115,16 @@ export const OrderItemCard: React.FC<OrderItemCardProps> = ({
             onClick={() => cancelOrder(orderItem)}
           />
         )}
-        {orderItem &&
-          (status === ORDER_STATUSES.Cancelled ||
-            status === ORDER_STATUSES.Delivered) && (
-            <DeleteButton
-              label="Remove"
-              style={{
-                width: "fit-content",
-                flex: "unset",
-              }}
-              onClick={() => removeOrder(orderItem)}
-            />
-          )}
+        {orderItem && status === ORDER_STATUSES.Cancelled && (
+          <DeleteButton
+            label="Remove"
+            style={{
+              width: "fit-content",
+              flex: "unset",
+            }}
+            onClick={() => removeOrder(orderItem)}
+          />
+        )}
       </div>
     </div>
   );

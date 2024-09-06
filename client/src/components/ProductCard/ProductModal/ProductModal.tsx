@@ -24,7 +24,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({
   product,
 }) => {
   const [isUpdating, setIsUpdating] = useState(false);
-  const [count, setCount] = useState(1);
+  const [count, setCount] = useState(Math.min(1, product.quantity));
   const getCartRequest = useOceanRequest({
     request: getCart,
   });
@@ -123,7 +123,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({
                   .toFixed(2)
                   .toLocaleString()}$`}
                 onClick={handleAddToCartButton}
-                disabled={isUpdating}
+                disabled={isUpdating || !product.quantity}
               />
 
               <SecondaryButton
@@ -139,11 +139,13 @@ export const ProductModal: React.FC<ProductModalProps> = ({
                       color={colors.blue03}
                       fontSize={16}
                       fontWeight={600}
-                      onClick={() => {
-                        if (count > 1) {
-                          setCount(count - 1);
-                        }
-                      }}
+                      onClick={
+                        count > 1
+                          ? () => {
+                              setCount(count - 1);
+                            }
+                          : undefined
+                      }
                     />
                     <div className={styles.quantityValue}>
                       <RawText
@@ -158,11 +160,13 @@ export const ProductModal: React.FC<ProductModalProps> = ({
                       color={colors.blue03}
                       fontSize={16}
                       fontWeight={600}
-                      onClick={() => {
-                        if (count < product.quantity) {
-                          setCount(count + 1);
-                        }
-                      }}
+                      onClick={
+                        count < product.quantity
+                          ? () => {
+                              setCount(count + 1);
+                            }
+                          : undefined
+                      }
                     />
                   </div>
                 }

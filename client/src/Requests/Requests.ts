@@ -46,8 +46,15 @@ export const baseOceanRequest = async <T>(
       body: body && JSON.stringify(body),
     });
 
-    const data = await fetch(request);
-    const parsedData = await data.json();
+    const response = await fetch(request);
+
+    if (!response.ok) {
+      throw new Error(
+        `HTTP error! Status: ${response.status} - ${response.statusText}`
+      );
+    }
+
+    const parsedData = await response.json();
 
     return parsedData;
   } catch (error) {

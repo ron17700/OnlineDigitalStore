@@ -3,6 +3,8 @@ import {
   ORDER_STATUSES,
   OrderStatus,
 } from "../../../../../DataModel/Objects/Order";
+import { PrimaryButton } from "../../../../PrimaryButton/PrimaryButton";
+import { RawText } from "../../../../RawText/RawText";
 import { OrderItemCard } from "./OrderItemCard/OrderItemCard";
 
 const sortOrders = (orders: Order[]): Order[] => {
@@ -32,6 +34,7 @@ type OrdersProps = {
   isLoading: boolean;
   cancelOrder: (order: Order) => void;
   removeOrder: (order: Order) => void;
+  moveToShoppingCart: () => void;
 };
 
 export const Orders: React.FC<OrdersProps> = ({
@@ -39,6 +42,7 @@ export const Orders: React.FC<OrdersProps> = ({
   orders,
   removeOrder,
   cancelOrder,
+  moveToShoppingCart,
 }) => {
   const sortedOrders = sortOrders(orders);
   console.log(sortedOrders);
@@ -56,6 +60,18 @@ export const Orders: React.FC<OrdersProps> = ({
           />
         );
       });
+    }
+
+    if (!sortedOrders.length) {
+      return (
+        <div className="flex-100 flex align-center layout-column row-gap-8">
+          <RawText text="Its look like you don't have any order." />
+          <PrimaryButton
+            label="Go to shopping cart"
+            onClick={moveToShoppingCart}
+          />
+        </div>
+      );
     }
 
     return sortedOrders.map((cartItem) => {

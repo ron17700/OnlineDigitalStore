@@ -5,7 +5,11 @@ import { TooltipContentWrapper } from "../../components/TooltipContentWrapper/To
 import { colors } from "../../styles/colors";
 import { UserProfileMenu } from "./UserProfileMenu/UserProfileMenu";
 import { NavbarButton } from "./NavbarButton/NavbarButton";
-import { ShoppingCartIcon, UserIcon } from "@heroicons/react/24/outline";
+import {
+  ShoppingCartIcon,
+  UserIcon,
+  MapPinIcon,
+} from "@heroicons/react/24/outline";
 import { MagnifyingGlassIcon } from "@heroicons/react/16/solid";
 import { OceanInput } from "../../components/OceanInput/OceanInput";
 import { SidePanelContext } from "../../Contexts/SidePanelContext";
@@ -18,24 +22,38 @@ import "./navbar.scss";
 interface NavbarProps {
   tabIndex?: number;
   setTabIndex?: React.Dispatch<React.SetStateAction<number>>;
-  onEnterDown?: (value: string) => void;
+  onEnterDown?: (searchString: string | undefined) => void;
+  freeSearchFilter?: string;
+  setFreeSearchFilter?: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export const Navbar: React.FC<NavbarProps> = (props) => {
-  const [searchValue, setSearchValue] = useState("");
+export const Navbar: React.FC<NavbarProps> = ({
+  freeSearchFilter,
+  setFreeSearchFilter,
+  onEnterDown,
+  setTabIndex,
+  tabIndex,
+}) => {
   const location = useLocation();
   const inputRef = useRef<HTMLInputElement>(null);
-  const searchInputRef = useRef<string>(searchValue);
 
   useEffect(() => {
+    const onEnterKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Enter" && onEnterDown) {
+        onEnterDown(freeSearchFilter);
+      }
+    };
+
     if (inputRef.current) {
-      inputRef.current.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" && props.onEnterDown) {
-          props.onEnterDown(searchInputRef.current);
-        }
-      });
+      inputRef.current.addEventListener("keydown", onEnterKeyDown);
     }
-  }, [inputRef]);
+
+    return () => {
+      if (inputRef.current) {
+        inputRef.current.removeEventListener("keydown", onEnterKeyDown);
+      }
+    };
+  }, [inputRef, freeSearchFilter]);
 
   return (
     <div
@@ -54,22 +72,23 @@ export const Navbar: React.FC<NavbarProps> = (props) => {
               width: "500px",
             }}
           >
-            <OceanInput
-              ref={inputRef}
-              onChange={(v) => {
-                setSearchValue(v);
-                searchInputRef.current = v;
-              }}
-              placeholder="Search for products..."
-              value={searchValue}
-              leftIcon={
-                <MagnifyingGlassIcon
-                  height="16px"
-                  width="16px"
-                  color={colors.gray02}
-                />
-              }
-            />
+            {!!setFreeSearchFilter && (
+              <OceanInput
+                ref={inputRef}
+                onChange={(v) => {
+                  setFreeSearchFilter(v);
+                }}
+                placeholder="Search for products..."
+                value={freeSearchFilter || ""}
+                leftIcon={
+                  <MagnifyingGlassIcon
+                    height="16px"
+                    width="16px"
+                    color={colors.gray02}
+                  />
+                }
+              />
+            )}
           </div>
         ) : location.pathname === "/admin" ? (
           <div
@@ -82,68 +101,68 @@ export const Navbar: React.FC<NavbarProps> = (props) => {
           >
             <button
               className={`button-style ${
-                props.tabIndex === 1 ? "active animate" : ""
+                tabIndex === 1 ? "active animate" : ""
               }`}
               onClick={() => {
-                if (props.setTabIndex) {
-                  props.setTabIndex(1);
+                if (setTabIndex) {
+                  setTabIndex(1);
                 }
               }}
             >
               <RawText
                 text={`Orders`}
-                color={props.tabIndex === 1 ? colors.blue03 : undefined}
+                color={tabIndex === 1 ? colors.blue03 : undefined}
                 fontSize={14}
                 fontWeight={700}
               />
             </button>
             <button
               className={`button-style ${
-                props.tabIndex === 2 ? "active animate" : ""
+                tabIndex === 2 ? "active animate" : ""
               }`}
               onClick={() => {
-                if (props.setTabIndex) {
-                  props.setTabIndex(2);
+                if (setTabIndex) {
+                  setTabIndex(2);
                 }
               }}
             >
               <RawText
                 text={`Products`}
-                color={props.tabIndex === 2 ? colors.blue03 : undefined}
+                color={tabIndex === 2 ? colors.blue03 : undefined}
                 fontSize={14}
                 fontWeight={700}
               />
             </button>
             <button
               className={`button-style ${
-                props.tabIndex === 3 ? "active animate" : ""
+                tabIndex === 3 ? "active animate" : ""
               }`}
               onClick={() => {
-                if (props.setTabIndex) {
-                  props.setTabIndex(3);
+                if (setTabIndex) {
+                  setTabIndex(3);
                 }
               }}
             >
               <RawText
                 text={`Analytics`}
-                color={props.tabIndex === 3 ? colors.blue03 : undefined}
+                color={tabIndex === 3 ? colors.blue03 : undefined}
                 fontSize={14}
                 fontWeight={700}
               />
             </button>
             <button
               className={`button-style ${
-                props.tabIndex === 4 ? "active animate" : ""
+                tabIndex === 4 ? "active animate" : ""
               }`}
               onClick={() => {
-                if (props.setTabIndex) {
-                  props.setTabIndex(4);
+                if (setTabIndex) {
+                  setTabIndex(4);
                 }
               }}
             >
               <RawText
                 text={`Categories`}
-                color={props.tabIndex === 4 ? colors.blue03 : undefined}
+                color={tabIndex === 4 ? colors.blue03 : undefined}
                 fontSize={14}
                 fontWeight={700}
               />
@@ -162,8 +181,28 @@ const RightNavbarContent: React.FC = () => {
 
   return (
     <div className="flex align-center column-gap-16">
+      <NavbarButton
+        icon={<MapPinIcon height="20px" width="20px" color={colors.gray01} />}
+        onClick={() => {
+          setActiveSidePanel(SIDE_PANELS.ADDRESSES);
+        }}
+      />
+      <NavbarButton
+        icon={
+          <ShoppingCartIcon height="20px" width="20px" color={colors.gray01} />
+        }
+        onClick={() => {
+          setActiveSidePanel(SIDE_PANELS.ORDERS_AND_SHOPPING_BAG);
+        }}
+      />
       <TooltipContentWrapper
-        content={<UserProfileMenu />}
+        content={
+          <UserProfileMenu
+            closeMenu={() => {
+              setUserProfileVisible(false);
+            }}
+          />
+        }
         delay={0}
         tooltipProps={{
           visible: userProfileVisible,
@@ -180,14 +219,6 @@ const RightNavbarContent: React.FC = () => {
           }}
         />
       </TooltipContentWrapper>
-      <NavbarButton
-        icon={
-          <ShoppingCartIcon height="20px" width="20px" color={colors.gray01} />
-        }
-        onClick={() => {
-          setActiveSidePanel(SIDE_PANELS.ORDERS_AND_SHOPPING_BAG);
-        }}
-      />
     </div>
   );
 };
