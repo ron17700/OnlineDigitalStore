@@ -5,6 +5,7 @@ import { colors } from "../../../styles/colors";
 import { Separator } from "../../../components/Separator/Separator";
 import { ROUTES } from "../../../Types/Routes";
 import { useNavigate } from "react-router-dom";
+import { useHasAdminPermission } from "../../../Hooks/UsePermissions";
 import "./user-profile-menu.scss";
 
 type UserProfileMenuProps = {
@@ -14,6 +15,7 @@ type UserProfileMenuProps = {
 export const UserProfileMenu: React.FC<UserProfileMenuProps> = ({
   closeMenu,
 }) => {
+  const isAdmin = useHasAdminPermission();
   const { user, logout } = useAuth0();
   const navigate = useNavigate(); // Use the useNavigate hook
 
@@ -40,17 +42,19 @@ export const UserProfileMenu: React.FC<UserProfileMenuProps> = ({
         </div>
       </div>
       <Separator />
-      <div className="logout-container">
-        <div
-          className="logout-container-content"
-          onClick={() => {
-            closeMenu();
-            navigate(`/${ROUTES.ADMIN}`); // Navigate to /Admin when clicked
-          }}
-        >
-          <RawText text="Admin Panel" />
+      {isAdmin && (
+        <div className="logout-container">
+          <div
+            className="logout-container-content"
+            onClick={() => {
+              closeMenu();
+              navigate(`/${ROUTES.ADMIN}`);
+            }}
+          >
+            <RawText text="Admin Panel" />
+          </div>
         </div>
-      </div>
+      )}
       <Separator />
       <div className="logout-container">
         <div

@@ -9,20 +9,32 @@ import { SidePanelTypes } from "./Types/SidePanels";
 import { SidePanel } from "./components/SidePanel/SidePanel";
 import { AdminPanel } from "./pages/AdminPanel/AdminPanel";
 import { Libraries, LoadScript } from "@react-google-maps/api";
-import "./App.scss";
+import { ProtectedRoute } from "./components/ProtectedRoute/ProtectedRoute";
+import { Product } from "./DataModel/Objects/Product";
+import { ProductsContext } from "./Contexts/ProductsContext";
+import { PermissionsContext } from "./Contexts/Permissionscontext";
 import "./styles/default-style.scss";
 import "react-toastify/dist/ReactToastify.css";
+import "./App.scss";
 
 const libraries: Libraries = ["places"];
 
 const router = createBrowserRouter([
   {
     path: `/${ROUTES.HOME}`,
-    element: <Home />,
+    element: (
+      <ProtectedRoute>
+        <Home />
+      </ProtectedRoute>
+    ),
   },
   {
     path: `/${ROUTES.ADMIN}`,
-    element: <AdminPanel />,
+    element: (
+      <ProtectedRoute>
+        <AdminPanel />
+      </ProtectedRoute>
+    ),
   },
   {
     path: `/${ROUTES.LOGIN}`,
@@ -35,24 +47,56 @@ export const App: React.FC = () => {
     null
   );
 
+  const [generalPageProducts, setGeneralPageProducts] = useState<Product[]>([]);
+  const [isLoadingGeneralPageProducts, setIsLoadingGeneralPageProducts] =
+    useState(false);
+  const [permissions, setPermissions] = useState<string[] | undefined>(
+    undefined
+  );
+
   const sidePaneContextValue = useMemo(() => {
     return {
       setActiveSidePanel,
     };
   }, []);
 
+  const productsContextValue = useMemo(() => {
+    return {
+      products: generalPageProducts,
+      setProducts: setGeneralPageProducts,
+      isLoading: isLoadingGeneralPageProducts,
+      setIsLoading: setIsLoadingGeneralPageProducts,
+    };
+  }, [
+    generalPageProducts,
+    setGeneralPageProducts,
+    isLoadingGeneralPageProducts,
+    setIsLoadingGeneralPageProducts,
+  ]);
+
+  const permissionsContextValue = useMemo(() => {
+    return {
+      permissions,
+      setPermissions,
+    };
+  }, [permissions, setPermissions]);
+
   return (
     <LoadScript
       googleMapsApiKey={"AIzaSyB4CW2Nb9m9IVvfM-11LekgWIYKvlyHSwk"}
       libraries={libraries}
     >
-      <SidePanelContext.Provider value={sidePaneContextValue}>
-        <div className="App">
-          <RouterProvider router={router} />
-          <ToastContainer />
-          <SidePanel activeSidePanel={activeSidePanel} />
-        </div>
-      </SidePanelContext.Provider>
+      <PermissionsContext.Provider value={permissionsContextValue}>
+        <ProductsContext.Provider value={productsContextValue}>
+          <SidePanelContext.Provider value={sidePaneContextValue}>
+            <div className="App">
+              <RouterProvider router={router} />
+              <ToastContainer />
+              <SidePanel activeSidePanel={activeSidePanel} />
+            </div>
+          </SidePanelContext.Provider>
+        </ProductsContext.Provider>
+      </PermissionsContext.Provider>
     </LoadScript>
   );
 };

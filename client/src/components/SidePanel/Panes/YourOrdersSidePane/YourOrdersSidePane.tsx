@@ -203,6 +203,9 @@ export const YourOrdersSidePane: React.FC = () => {
               isLoading={isLoadingOrders}
               removeOrder={removeOrder}
               cancelOrder={cancelOrder}
+              moveToShoppingCart={() => {
+                setActiveTabIndex(0);
+              }}
             />
           ),
         },

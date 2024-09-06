@@ -1,106 +1,44 @@
-import { useAuth0 } from "@auth0/auth0-react";
-import { useNavigate } from "react-router-dom";
 import { ProductsCategorySlide } from "./components/ProductsCategorySlideProps/ProductsCategorySlide";
-import { useOceanRequest } from "../../Hooks/UseOceanRequest";
-import {
-  getProducts,
-  GetProductsRequestParams,
-} from "../../Requests/Product/GetProducts";
 import {
   Category,
   MOCK_CATEGORY_NAMES,
 } from "../../DataModel/Objects/Category";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { Product } from "../../DataModel/Objects/Product";
-import { ROUTES } from "../../Types/Routes";
 import { FiltersPane } from "./components/FiltersPane/FiltersPane";
 import { Navbar } from "../../components/Navbar/Navbar";
-import { getCategories } from "../../Requests/Category/GetCategories";
+import { useProducts } from "../../Hooks/UseProducts";
+import { ChatBubbleOvalLeftEllipsisIcon } from "@heroicons/react/24/outline";
+import { colors } from "../../styles/colors";
+import { RawText } from "../../components/RawText/RawText";
+import { PrimaryButton } from "../../components/PrimaryButton/PrimaryButton";
 
 export const Home: React.FC = () => {
-  const { isAuthenticated, isLoading } = useAuth0();
-  const navigate = useNavigate();
-  const [products, setProducts] = useState<Product[]>();
-  const [isLoadingProducts, setIsLoadingProducts] = useState(true);
-  const [minPrice, setMinPrice] = useState<number | undefined>();
-  const [maxPrice, setMaxPrice] = useState<number | undefined>();
-  const [categories, setCategories] = useState<Category[]>();
-  const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
-  const [inStock, setInStock] = useState(false);
-  const [currentFilters, setCurrentFilters] =
-    useState<Omit<GetProductsRequestParams, "token">>();
+  const {
+    fetchProductsWithFilters,
+    filters,
+    isLoading: isLoadingProducts,
+    products,
+  } = useProducts();
 
-  const getProductsRequest = useOceanRequest({
-    request: getProducts,
-  });
-
-  const getCategoriesRequest = useOceanRequest({
-    request: getCategories,
-  });
+  const {
+    categories,
+    currentFilters,
+    freeSearchFilter,
+    inStock,
+    maxPrice,
+    minPrice,
+    selectedCategories,
+    setFreeSearchFilter,
+    setInStock,
+    setMaxPrice,
+    setMinPrice,
+    setSelectedCategories,
+  } = filters;
 
   useEffect(() => {
-    getCategoriesRequest(null).then((response) => {
-      setCategories(response);
-      setSelectedCategories(response);
-    });
+    fetchProductsWithFilters();
   }, []);
-
-  const fetchProducts = useCallback(
-    async (params: Omit<GetProductsRequestParams, "token"> = {}) => {
-      setIsLoadingProducts(true);
-
-      return getProductsRequest(params)
-        .then((response) => {
-          setProducts(response.products);
-        })
-        .catch((err) => {
-          console.error(err);
-          setProducts([]);
-        })
-        .finally(() => {
-          setIsLoadingProducts(false);
-        });
-    },
-    [getProductsRequest, setProducts, setIsLoadingProducts]
-  );
-
-  const fetchProductsWithFilters = useCallback(
-    (clearFilters: boolean = false, freeSearch: string = "") => {
-      if (clearFilters) {
-        setMinPrice(undefined);
-        setMaxPrice(undefined);
-        setSelectedCategories(categories || []);
-        setInStock(false);
-        setCurrentFilters(undefined);
-        return fetchProducts();
-      } else {
-        const filters: Omit<GetProductsRequestParams, "token"> = {
-          filters: {
-            search: freeSearch || undefined,
-            minPrice,
-            maxPrice,
-            inStock: inStock || undefined,
-            categories: selectedCategories.length
-              ? JSON.stringify(selectedCategories.map((c) => c.name))
-              : undefined,
-          },
-        };
-
-        setCurrentFilters(filters);
-
-        return fetchProducts(filters);
-      }
-    },
-    [minPrice, maxPrice, inStock, selectedCategories, fetchProducts]
-  );
-
-  useEffect(() => {
-    if (!isAuthenticated || isLoading) {
-      return;
-    }
-
-    fetchProducts();
-  }, [isLoading, isAuthenticated, fetchProducts]);
 
   const { productsByCategories } = useMemo(() => {
     const productsByCategories: {
@@ -131,23 +69,16 @@ export const Home: React.FC = () => {
     return { productsByCategories };
   }, [products]);
 
-  if (!isAuthenticated && !isLoading) {
-    navigate(`/${ROUTES.LOGIN}`);
-    return null;
-  }
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <div>
       <Navbar
-        onEnterDown={(search) => {
-          fetchProductsWithFilters(false, search);
+        freeSearchFilter={freeSearchFilter}
+        setFreeSearchFilter={setFreeSearchFilter}
+        onEnterDown={(searchString) => {
+          fetchProductsWithFilters(false, searchString);
         }}
       />
-      <div className="flex column-gap-24 relative">
+      <div className="flex column-gap-24 relative justify-center">
         <FiltersPane
           fetchProducts={fetchProductsWithFilters}
           categories={categories}
@@ -160,9 +91,8 @@ export const Home: React.FC = () => {
           setMaxPrice={setMaxPrice}
           setMinPrice={setMinPrice}
           setSelectedCategories={setSelectedCategories}
-          setCurrentFilters={setCurrentFilters}
         />
-        <div className="flex layout-column row-gap-24 overflow-hidden">
+        <div className="flex layout-column row-gap-24 overflow-hidden flex-1">
           {Object.values(productsByCategories).map(({ category, products }) => {
             return (
               <ProductsCategorySlide
@@ -184,6 +114,30 @@ export const Home: React.FC = () => {
                 />
               );
             })}
+          {!products.length && (
+            <div className="flex flex-1 flex-height-100 flex-100 align-center justify-center">
+              <div className="flex align-center layout-column row-gap-24">
+                <div className="flex align-center column-gap-8">
+                  <ChatBubbleOvalLeftEllipsisIcon
+                    height={24}
+                    width={24}
+                    color={colors.gray02}
+                  />
+                  <RawText
+                    fontSize={32}
+                    fontWeight={700}
+                    text="No products found"
+                  />
+                </div>
+                <PrimaryButton
+                  label="Clear filters"
+                  onClick={() => {
+                    fetchProductsWithFilters(true);
+                  }}
+                />
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

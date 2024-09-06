@@ -29,9 +29,6 @@ type FiltersPaneProps = {
   setMaxPrice: React.Dispatch<React.SetStateAction<number | undefined>>;
   setSelectedCategories: React.Dispatch<React.SetStateAction<Category[]>>;
   setInStock: React.Dispatch<React.SetStateAction<boolean>>;
-  setCurrentFilters: React.Dispatch<
-    React.SetStateAction<Omit<GetProductsRequestParams, "token"> | undefined>
-  >;
 
   fetchProducts: (clearFilters?: boolean) => Promise<void>;
 };
@@ -50,10 +47,16 @@ export const FiltersPane: React.FC<FiltersPaneProps> = ({
   setMinPrice,
   setSelectedCategories,
   setInStock,
-  setCurrentFilters,
 }) => {
   const [isVisible, setIsVisible] = useState(false);
 
+  const checkIfFilterRangesValid = () => {
+    if (minPrice && maxPrice) {
+      return minPrice <= maxPrice;
+    }
+
+    return true;
+  };
   const checkIfFiltersChanged = () => {
     const hasFilters =
       minPrice ||
@@ -121,9 +124,16 @@ export const FiltersPane: React.FC<FiltersPaneProps> = ({
                   color={colors.gray02}
                 />
               }
-              onChange={(value) =>
-                setMinPrice(value ? parseInt(value) : undefined)
-              }
+              onChange={(value) => {
+                if (value) {
+                  const parsedValue = parseInt(value);
+                  if (parsedValue >= 0) {
+                    setMinPrice(parsedValue);
+                  }
+                } else {
+                  setMinPrice(undefined);
+                }
+              }}
             />
           </div>
           <div className="flex align-center space-between">
@@ -140,9 +150,14 @@ export const FiltersPane: React.FC<FiltersPaneProps> = ({
               type="number"
               placeholder="Max price"
               value={maxPrice?.toString() || ""}
-              onChange={(value) =>
-                setMaxPrice(value ? parseInt(value) : undefined)
-              }
+              onChange={(value) => {
+                if (value) {
+                  const parsedValue = parseInt(value);
+                  setMaxPrice(parsedValue);
+                } else {
+                  setMaxPrice(undefined);
+                }
+              }}
             />
           </div>
         </div>
@@ -240,7 +255,7 @@ export const FiltersPane: React.FC<FiltersPaneProps> = ({
           <PrimaryButton
             label="Apply"
             onClick={() => fetchProducts()}
-            disabled={!checkIfFiltersChanged()}
+            disabled={!checkIfFiltersChanged() || !checkIfFilterRangesValid()}
           />
         </div>
       </div>
