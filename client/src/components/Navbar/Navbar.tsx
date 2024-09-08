@@ -22,7 +22,7 @@ import "./navbar.scss";
 interface NavbarProps {
   tabIndex?: number;
   setTabIndex?: React.Dispatch<React.SetStateAction<number>>;
-  onEnterDown?: (searchString: string | undefined) => void;
+  onSearch?: (searchString: string | undefined) => void;
   freeSearchFilter?: string;
   setFreeSearchFilter?: React.Dispatch<React.SetStateAction<string>>;
 }
@@ -30,29 +30,30 @@ interface NavbarProps {
 export const Navbar: React.FC<NavbarProps> = ({
   freeSearchFilter,
   setFreeSearchFilter,
-  onEnterDown,
+  onSearch,
   setTabIndex,
   tabIndex,
 }) => {
   const location = useLocation();
   const inputRef = useRef<HTMLInputElement>(null);
+  const debounceTimeout = useRef<number | null>(null);
 
   useEffect(() => {
-    const onEnterKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Enter" && onEnterDown) {
-        onEnterDown(freeSearchFilter);
+      if (debounceTimeout.current) {
+          clearTimeout(debounceTimeout.current);
       }
-    };
 
-    if (inputRef.current) {
-      inputRef.current.addEventListener("keydown", onEnterKeyDown);
-    }
+      debounceTimeout.current = window.setTimeout(() => {
+          if (onSearch) {
+              onSearch(freeSearchFilter);
+          }
+      }, 300);
 
-    return () => {
-      if (inputRef.current) {
-        inputRef.current.removeEventListener("keydown", onEnterKeyDown);
-      }
-    };
+      return () => {
+          if (debounceTimeout.current) {
+              clearTimeout(debounceTimeout.current);
+          }
+      };
   }, [inputRef, freeSearchFilter]);
 
   return (

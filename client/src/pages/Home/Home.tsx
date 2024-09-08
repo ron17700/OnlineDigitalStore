@@ -74,7 +74,7 @@ export const Home: React.FC = () => {
       <Navbar
         freeSearchFilter={freeSearchFilter}
         setFreeSearchFilter={setFreeSearchFilter}
-        onEnterDown={(searchString) => {
+        onSearch={(searchString) => {
           fetchProductsWithFilters(false, searchString);
         }}
       />

@@ -21,3 +21,14 @@
   border-radius: 50%;
   background-color: $gray-05;
 }
+
+.products-container {
+  display: grid;
+  align-content: center;
+  align-items: center;
+  justify-content: start;
+  justify-items: start;
+  grid-template-columns: auto auto auto auto auto auto auto;
+  gap: 15px 10px;
+  margin-top: 10px;
+}
