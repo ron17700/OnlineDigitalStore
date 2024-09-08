@@ -107,7 +107,9 @@ export const YourOrdersSidePane: React.FC = () => {
     updateCartRequest({
       cart: newCart,
     })
-      .then((response) => {})
+      .then((response) => {
+        toast.success("Cart item has been removed from cart")
+      })
       .catch(() => {
         toast.error("Failed to update cart");
         setCart(oldCart);

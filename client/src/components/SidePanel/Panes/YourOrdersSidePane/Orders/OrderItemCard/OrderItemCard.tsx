@@ -39,12 +39,23 @@ export const OrderItemCard: React.FC<OrderItemCardProps> = ({
 
   const address = orderItem?.address || null;
 
+  const getProducts = () => {
+    const products = orderItem?.products || [];
+    if (!isLoading) {
+     return Array.from({ length: products.length }).map((_, index) => {
+       return (
+           <img key={index} className="product-image" src={products[index].product.images[0]}
+                title={products[index].product.name} alt={products[index].product.name}/>
+       )
+     });
+    }
+  }
+
   return (
     <div className="cart-item-card-container overflow-hidden">
       <div className="flex align-center column-gap-16 overflow-hidden">
         <div className="flex layout-column row-gap-4 flex-1 overflow-hidden">
           <div className="flex align-center space-between column-gap-16 flex-1 overflow-hidden">
-            {isLoading ? <Shimmer /> : <RawText text={orderId} />}
             {isLoading ? (
               <Shimmer />
             ) : (
@@ -93,6 +104,9 @@ export const OrderItemCard: React.FC<OrderItemCardProps> = ({
               color={colors.gray02}
             />
           )}
+          {isLoading ? (
+              <Shimmer />
+          ) : <div className="products-container">{getProducts()}</div>}
         </div>
       </div>
 
