@@ -142,7 +142,9 @@ export const YourOrdersSidePane: React.FC = () => {
       orderId: newOrder._id,
       order: newOrder,
     })
-      .then((response) => {})
+      .then((response) => {
+        toast.success("Order Successfully canceled");
+      })
       .catch(() => {
         toast.error("Failed to cancel order");
         setOrders(oldOrders);
@@ -173,7 +175,9 @@ export const YourOrdersSidePane: React.FC = () => {
     deleteOrderRequest({
       orderId: order._id,
     })
-      .then((response) => {})
+      .then((response) => {
+        toast.success("Order Successfully removed");
+      })
       .catch(() => {
         toast.error("Failed to remove order");
         setOrders(oldOrders);

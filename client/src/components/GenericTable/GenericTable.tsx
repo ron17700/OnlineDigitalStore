@@ -44,7 +44,7 @@ const GenericTable = <T,>({ columns, data }: GenericTableProps<T>) => {
 
   const renderCellValue = (value: any) => {
     if (typeof value === 'string') {
-      return <RawText text={value} fontSize={14} />;
+      return <RawText  textOverflow={'ellipsis'} text={value} fontSize={14} />;
     } else if (isReactNode(value)) {
       return value;
     }
@@ -66,7 +66,7 @@ const GenericTable = <T,>({ columns, data }: GenericTableProps<T>) => {
           {paginateData(data).map((item, rowIndex) => (
             <tr key={rowIndex}>
               {columns.map((column) => (
-                <td key={String(column.field)} className={column.className || ''}>
+                <td key={String(column.field)} className={column.className || ''} style={{maxWidth:'100px'}}>
                   {column.render
                     ? column.render(item[column.field], item)
                     : renderCellValue(item[column.field])}
