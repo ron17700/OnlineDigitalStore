@@ -16,6 +16,7 @@ import { PermissionsContext } from "./Contexts/Permissionscontext";
 import "./styles/default-style.scss";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.scss";
+import { AdminRoute } from "./components/AdminRoute/AdminRoute";
 
 const libraries: Libraries = ["places"];
 
@@ -31,9 +32,9 @@ const router = createBrowserRouter([
   {
     path: `/${ROUTES.ADMIN}`,
     element: (
-      <ProtectedRoute>
+      <AdminRoute>
         <AdminPanel />
-      </ProtectedRoute>
+      </AdminRoute>
     ),
   },
   {
