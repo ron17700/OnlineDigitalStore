@@ -1,8 +1,7 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import { Navigate } from "react-router-dom";
-import { ROUTES } from "../../Types/Routes";
 import { Loader } from "../Loader/Loader";
 import { useHasAdminPermission } from "../../Hooks/UsePermissions";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 type AdminRouteProps = {
   children: React.ReactNode;
@@ -11,17 +10,15 @@ type AdminRouteProps = {
 export const AdminRoute: React.FC<AdminRouteProps> = ({ children }) => {
   const { isAuthenticated, isLoading } = useAuth0();
   const isAdmin = useHasAdminPermission();
+  const navigate = useNavigate(); // Initialize navigate hook
 
   if (isLoading) {
     return <Loader />;
   }
 
   if (!isAuthenticated || !isAdmin) {
-    Navigate({
-      to: ROUTES.LOGIN,
-    });
-
-    return null;
+    navigate("/login"); // Redirect to /login if not authenticated or not an admin
+    return null; // Return null after redirecting to avoid rendering the 404 message
   }
 
   return <>{children}</>;
