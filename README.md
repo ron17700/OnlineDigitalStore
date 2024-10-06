@@ -10,26 +10,30 @@ To run the server locally, follow these steps:
 
 Make sure you have Docker and Node.js installed on your machine.
 
-### Starting the Server
+### Starting the Server & Client In Dev Mode
 
-1. **Run Docker Compose:**  
-   Use this command to start the MongoDB service defined in the `docker-compose.yml` file.
-
-   ```bash
-   docker-compose up -d
-
-2. **Start the Node.js Server with Nodemon:**
+1. **Start the Node.js Server with Nodemon:**
    Use these commands to start the Node.js server using Nodemon, which monitors for any changes in your source code and automatically restarts the server.
    ```bash
-   npm ci       # Install Node.js packages (clean install)
+   cd server && npm ci       # Install Node.js packages (clean install)
    ```
    ```bash
-   npm run start:dev    # Start the server in dev mode
+   cd server && npm run start:dev    # Start the server in dev mode
    ```
+
+2. **Start the React JS Client:**
+   Use these commands to start the client.
+   ```bash
+   cd client && npm ci       # Install React JS packages (clean install)
+   ```
+   ```bash
+   cd client && npm run start    # Start the client in dev mode
+   ```
+   
 3. **Accessing the Application**
    Once the server is running, you can access the application at the following URL:
 
-    http://localhost:3001
+    http://localhost:3000
 
 **Additional Information**
 You can change server configuration in the `.env` file.
