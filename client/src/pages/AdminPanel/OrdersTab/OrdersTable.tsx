@@ -76,8 +76,8 @@ const OrdersTable: React.FC<OrdersTableProps> = ({ data, onRefresh }) => {
     { field: "updatedAt" as keyof Order , label: "Last Updated Date",
       render: (_: any, item: Order) => (
         <div>
-          {new Date(item.createdAt).toLocaleDateString()}{" "}
-          {new Date(item.createdAt).toLocaleTimeString()}
+          {new Date(item.updatedAt).toLocaleDateString()}{" "}
+          {new Date(item.updatedAt).toLocaleTimeString()}
         </div>
       ),
      },
