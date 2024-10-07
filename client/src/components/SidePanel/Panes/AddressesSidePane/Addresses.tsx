@@ -7,6 +7,7 @@ import { PrimaryButton } from "../../../PrimaryButton/PrimaryButton";
 import { RawText } from "../../../RawText/RawText";
 import { AddressCard } from "../YourOrdersSidePane/ShoppingCart/Checkout/AddressCard/AddressCard";
 import { deleteAddress } from "../../../../Requests/Address/DeleteAddress";
+import {useAuth0} from "@auth0/auth0-react";
 
 type AddressesProps = {
   moveToCreateAddress: () => void;
@@ -18,6 +19,7 @@ export const Addresses: React.FC<AddressesProps> = ({
   const [isLoadingAddresses, setIsLoadingAddresses] = useState(true);
   const [addresses, setAddresses] = useState<Address[]>([]);
   const addressesRef = useRef(addresses);
+  const { user} = useAuth0();
 
   const getAddressesRequest = useOceanRequest({
     request: getAddresses,
@@ -48,7 +50,8 @@ export const Addresses: React.FC<AddressesProps> = ({
 
     getAddressesRequest(null)
       .then((res) => {
-        setAddresses(res);
+        const myAddresses = res.filter(address => address.user === user?.sub);
+        setAddresses(myAddresses);
       })
       .catch((err) => {
         setAddresses([]);

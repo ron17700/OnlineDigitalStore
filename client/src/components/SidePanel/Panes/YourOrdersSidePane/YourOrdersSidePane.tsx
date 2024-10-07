@@ -14,6 +14,7 @@ import { updateOrder } from "../../../../Requests/Order/UpdateOrder";
 import { deepClone } from "../../../../Utils/ObjectUtils";
 import { getAddresses } from "../../../../Requests/Address/GetAddresses";
 import { Address } from "../../../../DataModel/Objects/Address";
+import {useAuth0} from "@auth0/auth0-react";
 
 export const YourOrdersSidePane: React.FC = () => {
   const [activeTabIndex, setActiveTabIndex] = useState(0);
@@ -23,6 +24,7 @@ export const YourOrdersSidePane: React.FC = () => {
   const [isLoadingCart, setIsLoadingCart] = useState(true);
   const [isLoadingOrders, setIsLoadingOrders] = useState(true);
   const [isLoadingAddresses, setIsLoadingAddresses] = useState(true);
+  const { user} = useAuth0();
 
   const getAddressesRequest = useOceanRequest({
     request: getAddresses,
@@ -55,7 +57,8 @@ export const YourOrdersSidePane: React.FC = () => {
 
     getOrdersRequest(null)
       .then((res) => {
-        setOrders(res);
+        const myOrders = res.filter(order => order.user === user?.sub);
+        setOrders(myOrders);
       })
       .catch((err) => {
         setOrders([]);
